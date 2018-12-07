@@ -6,6 +6,8 @@ import { FormsModule } from '@angular/forms';
 
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 
+import { MatIconModule } from '@angular/material';
+
 import { AppRoutingModule } from './app-routing.module';
 
 // NG Translate
@@ -32,6 +34,7 @@ export function HttpLoaderFactory(http: HttpClient) {
   ],
   imports: [
     BrowserModule,
+    MatIconModule,
     FormsModule,
     HttpClientModule,
     AppRoutingModule,
