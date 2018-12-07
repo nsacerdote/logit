@@ -6,7 +6,6 @@ import { FormsModule } from '@angular/forms';
 
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 
-import { MatIconModule } from '@angular/material';
 
 import { AppRoutingModule } from './app-routing.module';
 
@@ -18,8 +17,13 @@ import { ElectronService } from './providers/electron.service';
 
 import { WebviewDirective } from './directives/webview.directive';
 
+import { AppMaterialModule } from './shared/app-material.module';
+
 import { AppComponent } from './app.component';
-import { HomeComponent } from './components/home/home.component';
+import { HeaderComponent } from './components/header/header.component';
+import { SettingsComponent } from './components/settings/settings.component';
+import { WorklogsComponent } from './components/worklogs/worklogs.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -29,12 +33,15 @@ export function HttpLoaderFactory(http: HttpClient) {
 @NgModule({
   declarations: [
     AppComponent,
-    HomeComponent,
-    WebviewDirective
+    WebviewDirective,
+    HeaderComponent,
+    SettingsComponent,
+    WorklogsComponent
   ],
   imports: [
     BrowserModule,
-    MatIconModule,
+    BrowserAnimationsModule,
+    AppMaterialModule,
     FormsModule,
     HttpClientModule,
     AppRoutingModule,
