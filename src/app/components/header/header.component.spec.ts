@@ -31,7 +31,7 @@ describe('HeaderComponent', () => {
 
   it('should contain the app name', () => {
     const appAnchor: HTMLAnchorElement = fixture.debugElement.nativeElement.querySelector('.brand');
-    expect(appAnchor.text).toContain('Kaal');
+    expect(appAnchor.text).toContain('Logit');
   });
 
   describe('Navigation', () => {
