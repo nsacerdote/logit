@@ -44,11 +44,11 @@ describe('HeaderComponent', () => {
       hrefs = anchors.map((anchor) => anchor.getAttribute('href'));
     });
 
-    it('should provide a way to access worklogs', () => {
-      expect(hrefs).toEqual(jasmine.arrayContaining(['/worklogs']));
+    it('should provide a way to access the workday', () => {
+      expect(hrefs).toEqual(jasmine.arrayContaining(['/workday']));
     });
 
-    it('should provide a way to access settings', () => {
+    it('should provide a way to access the settings', () => {
       expect(hrefs).toEqual(jasmine.arrayContaining(['/settings']));
     });
 

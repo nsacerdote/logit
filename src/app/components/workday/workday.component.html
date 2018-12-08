@@ -1,0 +1,8 @@
+<form novalidate [formGroup]="workdayForm" (ngSubmit)="sendWorklogs()">
+  <app-worklog-list formControlName="worklogs"></app-worklog-list>
+  <app-workday-summary></app-workday-summary>
+  <app-reminders></app-reminders>
+
+  <button type="submit" mat-fab><i class="material-icons md-light">send</i></button>
+</form>
+
