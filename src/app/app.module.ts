@@ -4,13 +4,12 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 
 import { AppRoutingModule } from './app-routing.module';
-
 // NG Translate
-import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { ElectronService } from './services/electron.service';
@@ -23,7 +22,7 @@ import { SettingsComponent } from './components/settings/settings.component';
 import { WorkdayComponent } from './components/workday/workday.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { WorklogListComponent } from './components/workday/worklog-list/worklog-list.component';
-import { WorklogListItemComponent } from './components/workday/worklog-list-item/worklog-list-item.component';
+import { WorklogListItemComponent } from './components/workday/worklog-list/worklog-list-item/worklog-list-item.component';
 import { RemindersComponent } from './components/workday/reminders/reminders.component';
 import { WorkdaySummaryComponent } from './components/workday/workday-summary/workday-summary.component';
 

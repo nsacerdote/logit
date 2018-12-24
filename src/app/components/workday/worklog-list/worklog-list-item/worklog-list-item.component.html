@@ -1,0 +1,37 @@
+<ng-content></ng-content>
+<td class="mat-cell time">
+  <mat-form-field class="less-padding">
+    <input matInput
+           [formControl]="worklogFormGroup.get('startTime')">
+  </mat-form-field>
+</td>
+<td class="mat-cell time">
+  <mat-form-field class="less-padding">
+    <input matInput
+           [formControl]="worklogFormGroup.get('endTime')">
+  </mat-form-field>
+</td>
+<td class="mat-cell spent">
+  {{ calcSpentTime() }}
+</td>
+<td class="mat-cell description">
+  <mat-form-field class="less-padding">
+    <textarea matInput
+              [formControl]="worklogFormGroup.get('description')"
+              [cdkTextareaAutosize]="true">
+    </textarea>
+  </mat-form-field>
+</td>
+<td class="mat-cell issue">
+  <mat-form-field class="less-padding issue">
+    <input matInput
+           (keydown.Tab)="handleTabOnLastInput()"
+           [formControl]="worklogFormGroup.get('issue').get('key')">
+  </mat-form-field>
+</td>
+<td class="mat-cell status">
+  {{ worklogFormGroup.get('status').value }}
+</td>
+<td class="mat-cell actions">
+  <i class="material-icons md-dark" *ngIf="!disabled" (click)="deleteRowClicked()">remove_circle</i>
+</td>

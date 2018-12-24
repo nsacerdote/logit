@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, } from '@angular/core';
 import { FormBuilder, FormGroup, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { BaseControlValueAccessorComponent } from '../../../shared/base-control-value-accessor.component';
+import { BaseControlValueAccessorComponent } from '../../../../shared/base-control-value-accessor.component';
 import { Observable } from 'rxjs';
+import { Worklog } from '../../../../models/worklog.model';
 
 @Component({
-  selector: 'app-worklog-list-item',
+  // tslint:disable-next-line:component-selector
+  selector: '[app-worklog-list-item]',
   templateUrl: './worklog-list-item.component.html',
   styleUrls: ['./worklog-list-item.component.scss'],
   providers: [
@@ -16,6 +18,11 @@ import { Observable } from 'rxjs';
   ]
 })
 export class WorklogListItemComponent extends BaseControlValueAccessorComponent implements OnInit {
+
+  @Input() disabled = false;
+
+  @Output() newRow = new EventEmitter<void>();
+  @Output() rowDelete = new EventEmitter<void>();
 
   worklogFormGroup: FormGroup;
 
@@ -34,6 +41,9 @@ export class WorklogListItemComponent extends BaseControlValueAccessorComponent 
       }),
       'status': ''
     });
+    if (this.disabled) {
+      this.worklogFormGroup.disable();
+    }
   }
 
   writeValue(worklog: any): void {
@@ -44,4 +54,18 @@ export class WorklogListItemComponent extends BaseControlValueAccessorComponent 
     return this.worklogFormGroup.valueChanges;
   }
 
+  calcSpentTime(): string {
+    return Worklog.calcWorkedTime(
+      this.worklogFormGroup.get('startTime').value,
+      this.worklogFormGroup.get('endTime').value
+    );
+  }
+
+  handleTabOnLastInput() {
+    this.newRow.emit();
+  }
+
+  deleteRowClicked() {
+    this.rowDelete.emit();
+  }
 }

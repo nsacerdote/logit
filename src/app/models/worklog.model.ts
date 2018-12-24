@@ -11,4 +11,13 @@ export class Worklog {
               public description: string,
               public issue: Issue,
               public status: WorklogStatus) { }
+
+  static calcWorkedTime(startTime: string, endTime: string): string {
+    // TODO: use start and endtime to calc
+    return '0m';
+  }
+
+  getWorkedTime(): string {
+    return Worklog.calcWorkedTime(this.startTime, this.endTime);
+  }
 }

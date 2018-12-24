@@ -1,3 +1,14 @@
-<p>
-  reminders works!
-</p>
+<mat-card>
+  <mat-card-subtitle>
+    Reminders
+  </mat-card-subtitle>
+  <mat-card-content>
+    <mat-form-field class="less-padding">
+      <textarea matInput
+                placeholder="Write a reminder"
+                [formControl]="remindersFormControl"
+                [cdkTextareaAutosize]="true">
+      </textarea>
+    </mat-form-field>
+  </mat-card-content>
+</mat-card>
