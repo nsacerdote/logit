@@ -13,7 +13,8 @@
 <td class="mat-cell description">
   <textarea class="multiline_input" rows="1"
             [formControl]="worklogFormGroup.get('description')"
-            [cdkTextareaAutosize]="true">
+            [cdkTextareaAutosize]="true"
+            [cdkAutosizeMaxRows]="3">
   </textarea>
 </td>
 <td class="mat-cell issue">
