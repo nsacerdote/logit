@@ -1,37 +1,32 @@
 <ng-content></ng-content>
 <td class="mat-cell time">
-  <mat-form-field class="less-padding">
-    <input matInput
-           [formControl]="worklogFormGroup.get('startTime')">
-  </mat-form-field>
+   <app-timepicker [shouldFocus]="shouldFocus" [timePickerControl]="worklogFormGroup.get('startTime')">
+   </app-timepicker>
 </td>
 <td class="mat-cell time">
-  <mat-form-field class="less-padding">
-    <input matInput
-           [formControl]="worklogFormGroup.get('endTime')">
-  </mat-form-field>
+   <app-timepicker [timePickerControl]="worklogFormGroup.get('endTime')">
+   </app-timepicker>
 </td>
 <td class="mat-cell spent">
-  {{ calcSpentTime() }}
+   {{ calcSpentTime() }}
 </td>
 <td class="mat-cell description">
-  <mat-form-field class="less-padding">
-    <textarea matInput
-              [formControl]="worklogFormGroup.get('description')"
-              [cdkTextareaAutosize]="true">
-    </textarea>
-  </mat-form-field>
+  <textarea class="multiline_input" rows="1"
+            [formControl]="worklogFormGroup.get('description')"
+            [cdkTextareaAutosize]="true">
+  </textarea>
 </td>
 <td class="mat-cell issue">
-  <mat-form-field class="less-padding issue">
-    <input matInput
-           (keydown.Tab)="handleTabOnLastInput()"
-           [formControl]="worklogFormGroup.get('issue').get('key')">
-  </mat-form-field>
+   <input class="input" placeholder="ABC-100"
+          [formControl]="worklogFormGroup.get('issue').get('key')">
 </td>
 <td class="mat-cell status">
-  {{ worklogFormGroup.get('status').value }}
+   {{ worklogFormGroup.get('status').value }}
 </td>
 <td class="mat-cell actions">
-  <i class="material-icons md-dark" *ngIf="!disabled" (click)="deleteRowClicked()">remove_circle</i>
+   <button mat-icon-button *ngIf="!disabled"
+           (click)="deleteRowClicked()"
+           (keydown.Tab)="handleTabOnLastInput($event)">
+      <mat-icon class="md-dark" aria-label="Remove Worklog">remove_circle</mat-icon>
+   </button>
 </td>

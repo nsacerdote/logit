@@ -1,134 +1,169 @@
-@import 'variables';
+@import 'theme';
+
+$handleWidth: 50px;
+$timeAndSpentWidth: 70px;
+$issueWidth: 120px;
+$statusWidth: 100px;
+$actionsWidth: 50px;
 
 table {
-  width: 100%;
+   width: 100%;
 }
 
-th.handle {
-  width: 60px;
-}
-th.time,
-th.spent {
-  width: 100px;
+th.mat-header-cell:first-child {
+   padding-left: 8px;
 }
 
-th.issue {
-  width: 120px;
-}
-th.status,
-th.actions {
-  width: 150px;
+th.mat-header-cell:last-child {
+   padding-right: 8px;
 }
 
 tr {
-  line-height: 50px;
+   line-height: 40px;
+}
+
+th.handle {
+   width: $handleWidth;
+}
+
+th.time,
+th.spent {
+   width: $timeAndSpentWidth;
+}
+
+th.issue {
+   width: $issueWidth;
+}
+
+th.status{
+   width: $statusWidth;
+}
+
+th.actions {
+   width: $actionsWidth;
 }
 
 th.description {
-  text-align: left;
+   text-align: left;
 }
 
 ::ng-deep td {
 
-  text-align: center;
+   text-align: center;
 
-  mat-form-field {
-    text-align: center !important;
-    margin-right: 5px;
-    margin-left: 5px;
-  }
-
-  &.time mat-form-field {
-    width: 50px;
-  }
-
-  &.description {
-    flex: 1;
-    text-align: left;
-    padding-right: 20px;
-
-    mat-form-field {
-      text-align: left !important;
-      display: block;
-    }
-
-  }
-
-  &.issue mat-form-field {
-    width: 80px;
-  }
-
-  &.handle {
-    cursor: move;
-    i {
+   input {
+      text-align: center;
+      margin-right: 5px;
+      margin-left: 5px;
       vertical-align: middle;
-    }
-  }
+   }
 
-  &.actions i {
-    cursor: pointer;
-    vertical-align: middle;
+   &.mat-cell:last-child,
+   &.mat-footer-cell:last-child{
+      padding: 8px;
+   }
 
-    &:hover {
-      color: red;
-    }
-  }
+   &.mat-cell:first-child,
+   &.mat-footer-cell:first-child{
+      padding: 8px;
+   }
+
+   &.time input {
+      width: 50px;
+   }
+
+   &.description {
+      flex: 1;
+      text-align: left;
+      padding: 5px 10px 5px 0;
+
+      textarea {
+         vertical-align: middle;
+         text-align: left;
+      }
+
+   }
+
+   &.issue input {
+      width: 80px;
+   }
+
+   &.handle button {
+      cursor: move;
+   }
+
+   &.actions button:hover mat-icon {
+      color: $errorColor;
+   }
 }
 
 .cdk-drag-preview {
-  display: flex;
-  opacity: 0.95;
-  background-color: white;
-  border-radius: 4px;
-  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
-  0 8px 10px 1px rgba(0, 0, 0, 0.14),
-  0 3px 14px 2px rgba(0, 0, 0, 0.12);
-  cursor: move;
 
-  ::ng-deep {
-    mat-form-field {
-      pointer-events: none;
-    }
-    td.handle {
-      width: 60px;
-    }
-    td.time,
-    td.spent {
-      width: 100px;
-    }
+   display: flex;
+   align-items: center;
+   opacity: 0.95;
+   background-color: white;
+   border-radius: 4px;
+   box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+   0 8px 10px 1px rgba(0, 0, 0, 0.14),
+   0 3px 14px 2px rgba(0, 0, 0, 0.12);
+   cursor: move;
 
-    td.issue {
-      width: 120px;
-    }
-    td.status,
-    td.actions {
-      width: 150px;
-    }
-  }
+   ::ng-deep {
+      td {
+         border: none;
+      }
+
+      input,
+      textarea {
+         pointer-events: none;
+      }
+
+      td.handle {
+         width: $handleWidth;
+      }
+
+      td.time,
+      td.spent {
+         width: $timeAndSpentWidth;
+      }
+
+      td.issue {
+         width: $issueWidth;
+      }
+
+      td.status{
+         width: $statusWidth;
+      }
+
+      td.actions {
+         width: $actionsWidth;
+      }
+
+   }
 }
-.cdk-drag-placeholder {
-  background-color: $bg-gray;
+
+.cdk-drag-placeholder{
+   opacity: 0;
 }
 
 .cdk-drag-animating {
-  transition: transform 200ms cubic-bezier(0, 0, 0.2, 1);
+   transition: transform 200ms cubic-bezier(0, 0, 0.2, 1);
 }
 
 .cdk-drop-list-dragging :not(.cdk-drag-placeholder) {
-  transition: transform 200ms cubic-bezier(0, 0, 0.2, 1);
+   transition: transform 200ms cubic-bezier(0, 0, 0.2, 1);
 }
 
 tr.new-row {
-  opacity: 0.5;
-  cursor: pointer;
-  background-color: $bg-gray;
+   opacity: 0.5;
+   cursor: pointer;
+   background-color: $grey200;
 
-  ::ng-deep td.handle {
-    cursor: pointer;
-  }
-
-  ::ng-deep mat-form-field {
-    pointer-events: none;
-  }
+   ::ng-deep {
+      input,
+      textarea {
+         pointer-events: none;
+      }
+   }
 }
-

@@ -1,34 +1,46 @@
-@import "variables";
+@import "theme";
+@import "mixins";
 
 :host {
-  display: flex;
-  padding: 20px;
-  background-color: $bg-gray;
-  min-height: 100%;
-  box-sizing: border-box;
+   display: flex;
+   background-color: $grey100;
+   min-height: 100%;
+   box-sizing: border-box;
+}
+
+.sidebar {
+   width: 200px;
+   transition: width 250ms ease;
+   background-color: $grey50;
+   border-right: 1px solid $greyBorder;
+
+   @include for-desktop-up {
+      width: 250px;
+   }
 }
 
 form {
-  width: 100%;
+   flex: 1;
+   padding: 20px;
 }
 
 .bottom-components {
-  margin-top: 15px;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+   margin-top: 15px;
+   display: flex;
+   flex-direction: row;
+   justify-content: space-between;
 
-  >* {
-    flex: 1;
-  }
+   > * {
+      flex: 1;
+   }
 
-  >*:first-child {
-    margin-right: 10px;
-  }
+   > *:first-child {
+      margin-right: 10px;
+   }
 }
 
 button[type="submit"] {
-  position: absolute;
-  bottom: 50px;
-  right: 50px;
+   position: absolute;
+   bottom: 50px;
+   right: 50px;
 }

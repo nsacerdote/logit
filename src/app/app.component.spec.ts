@@ -7,31 +7,31 @@ import { HeaderComponent } from './components/header/header.component';
 import { AppMaterialModule } from './shared/app-material.module';
 
 describe('AppComponent', () => {
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [
-        AppComponent,
-        HeaderComponent
-      ],
-      providers: [
-        ElectronService
-      ],
-      imports: [
-        RouterTestingModule,
-        TranslateModule.forRoot(),
-        AppMaterialModule
-      ]
-    }).compileComponents();
-  }));
+   beforeEach(async(() => {
+      TestBed.configureTestingModule({
+         declarations: [
+            AppComponent,
+            HeaderComponent
+         ],
+         providers: [
+            ElectronService
+         ],
+         imports: [
+            RouterTestingModule,
+            TranslateModule.forRoot(),
+            AppMaterialModule
+         ]
+      }).compileComponents();
+   }));
 
-  it('should create the app', async(() => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.debugElement.componentInstance;
-    expect(app).toBeTruthy();
-  }));
+   it('should create the app', async(() => {
+      const fixture = TestBed.createComponent(AppComponent);
+      const app = fixture.debugElement.componentInstance;
+      expect(app).toBeTruthy();
+   }));
 });
 
 class TranslateServiceStub {
-  setDefaultLang(lang: string): void {
-  }
+   setDefaultLang(lang: string): void {
+   }
 }

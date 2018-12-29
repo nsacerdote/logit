@@ -25,40 +25,43 @@ import { WorklogListComponent } from './components/workday/worklog-list/worklog-
 import { WorklogListItemComponent } from './components/workday/worklog-list/worklog-list-item/worklog-list-item.component';
 import { RemindersComponent } from './components/workday/reminders/reminders.component';
 import { WorkdaySummaryComponent } from './components/workday/workday-summary/workday-summary.component';
+import { TimepickerComponent } from './shared/timepicker/timepicker.component';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
-  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    HeaderComponent,
-    SettingsComponent,
-    WorkdayComponent,
-    WorklogListComponent,
-    WorklogListItemComponent,
-    RemindersComponent,
-    WorkdaySummaryComponent
-  ],
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    AppMaterialModule,
-    FormsModule,
-    ReactiveFormsModule,
-    HttpClientModule,
-    AppRoutingModule,
-    TranslateModule.forRoot({
-      loader: {
-        provide: TranslateLoader,
-        useFactory: (HttpLoaderFactory),
-        deps: [HttpClient]
-      }
-    })
-  ],
-  providers: [ElectronService],
-  bootstrap: [AppComponent]
+   declarations: [
+      AppComponent,
+      HeaderComponent,
+      SettingsComponent,
+      WorkdayComponent,
+      WorklogListComponent,
+      WorklogListItemComponent,
+      RemindersComponent,
+      WorkdaySummaryComponent,
+      TimepickerComponent
+   ],
+   imports: [
+      BrowserModule,
+      BrowserAnimationsModule,
+      AppMaterialModule,
+      FormsModule,
+      ReactiveFormsModule,
+      HttpClientModule,
+      AppRoutingModule,
+      TranslateModule.forRoot({
+         loader: {
+            provide: TranslateLoader,
+            useFactory: (HttpLoaderFactory),
+            deps: [HttpClient]
+         }
+      })
+   ],
+   providers: [ElectronService],
+   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}

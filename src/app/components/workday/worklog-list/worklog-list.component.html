@@ -1,49 +1,53 @@
 <mat-card>
 
-  <mat-card-subtitle>
-    Worklogs
-  </mat-card-subtitle>
+   <mat-card-subtitle>
+      Worklogs
+   </mat-card-subtitle>
 
-  <mat-card-content>
-    <table class="mat-table">
+   <mat-card-content>
+      <table class="mat-table">
 
-      <thead>
-      <tr class="mat-header-row">
-        <th class="mat-header-cell handle">&nbsp;</th>
-        <th class="mat-header-cell time">Start</th>
-        <th class="mat-header-cell time">End</th>
-        <th class="mat-header-cell spent">Spent</th>
-        <th class="mat-header-cell description">Description</th>
-        <th class="mat-header-cell issue">Issue</th>
-        <th class="mat-header-cell status">Status</th>
-        <th class="mat-header-cell actions">&nbsp;</th>
-      </tr>
-      </thead>
+         <thead>
+         <tr class="mat-header-row">
+            <th class="mat-header-cell handle">&nbsp;</th>
+            <th class="mat-header-cell time">Start</th>
+            <th class="mat-header-cell time">End</th>
+            <th class="mat-header-cell spent">Spent</th>
+            <th class="mat-header-cell description">Description</th>
+            <th class="mat-header-cell issue">Issue</th>
+            <th class="mat-header-cell status">Status</th>
+            <th class="mat-header-cell actions">&nbsp;</th>
+         </tr>
+         </thead>
 
-      <tbody cdkDropList (cdkDropListDropped)="drop($event)">
-      <tr class="mat-row"
-          app-worklog-list-item
-          *ngFor="let worklogControl of worklogsFormArray.controls; let index = index; let last = last;"
-          [formControl]="worklogControl"
-          (rowDelete)="deleteWorklog(index)"
-          (newRow)="last ? addNewWorklog() : false"
-          cdkDrag cdkDragLockAxis="y">
-        <td class="mat-cell handle" cdkDragHandle>
-          <i class="material-icons md-dark handle">drag_handle</i>
-        </td>
-      </tr>
-      </tbody>
+         <tbody cdkDropList (cdkDropListDropped)="drop($event)">
+         <tr class="mat-row"
+             app-worklog-list-item
+             *ngFor="let worklogControl of worklogsFormArray.controls; let index = index; let last = last;"
+             [formControl]="worklogControl"
+             (rowDelete)="deleteWorklog(index)"
+             [last]="last"
+             (newRow)="addNewWorklog()"
+             [shouldFocus]="focusIndex === index"
+             cdkDrag cdkDragLockAxis="y">
+            <td class="mat-cell handle">
+               <button mat-icon-button cdkDragHandle>
+                  <mat-icon class="md-dark" aria-label="Drag Handle">drag_indicator</mat-icon>
+               </button>
+            </td>
+         </tr>
+         </tbody>
 
-      <tbody>
-      <tr class="mat-row new-row"
-          app-worklog-list-item
-          [disabled]="true"
-          (click)="addNewWorklog()">
-        <td class="mat-cell handle">
-        </td>
-      </tr>
-      </tbody>
+         <tbody>
+         <tr class="mat-row new-row"
+             app-worklog-list-item
+             [disabled]="true"
+             (click)="addNewWorklog()">
+            <td class="mat-cell handle">
+            </td>
+         </tr>
+         </tbody>
 
-    </table>
-  </mat-card-content>
+      </table>
+   </mat-card-content>
 </mat-card>

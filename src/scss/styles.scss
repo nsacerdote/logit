@@ -1,11 +1,7 @@
-@import "~@angular/material/prebuilt-themes/indigo-pink.css";
 @import 'fonts';
-@import '~@angular/material/theming';
-
-$custom-typography: mat-typography-config(
-  $font-family: 'Open Sans, sans-serif'
-);
-@include mat-core($custom-typography);
+@import 'theme';
+@import 'tables';
+@import 'inputs';
 
 *:not(textarea), *:before, *:after {
   box-sizing: border-box;
@@ -18,36 +14,6 @@ html, body {
   font-family: 'Open Sans', sans-serif;
 }
 
-.mat-form-field.less-padding > .mat-form-field-wrapper {
-  margin-bottom: -0.5em;
-}
-
-table.mat-table {
-  border-spacing: 0;
-}
-
-tr.mat-header-row {
-  height: 56px;
-}
-
-tr.mat-row, tr.mat-footer-row {
-  height: 48px;
-}
-
-th.mat-header-cell {
-  text-align: center;
-}
-
-th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
-  padding: 0;
-  border-bottom-width: 1px;
-  border-bottom-style: solid;
-}
-
-th.mat-header-cell:first-child, td.mat-cell:first-child, td.mat-footer-cell:first-child {
-  padding-left: 24px;
-}
-
-th.mat-header-cell:last-child, td.mat-cell:last-child, td.mat-footer-cell:last-child {
-  padding-right: 24px;
+.mat-card {
+  user-select: none;
 }

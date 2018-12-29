@@ -1,0 +1,45 @@
+<input class="input" placeholder="00:00"
+       maxlength="5"
+       [formControl]="timePickerControl"
+       (focus)="onFocus()"
+       (blur)="onBlur()"
+       (keydown.arrowup)="onUpArrowKeyDown($event)"
+       (keydown.arrowright)="onRightArrowKeyDown($event)"
+       (keydown.arrowdown)="onDownArrowKeyDown($event)"
+       (keydown.arrowleft)="onLeftArrowKeyDown($event)"
+       #inputElement>
+
+<div class="time-picker__options mat-elevation-z3"
+     *ngIf="showTimeSelector"
+     (mousedown)="onMouseDownMenu($event)">
+
+   <div class="time-picker__controls">
+      <a (click)="hoursControlUp()" class="material-icons md-18">keyboard_arrow_up</a>
+      &nbsp;
+      <a (click)="minutesControlUp()" class="material-icons md-18">keyboard_arrow_up</a>
+   </div>
+
+   <div class="time-picker__option"
+        *ngFor="let option of options"
+         [ngClass]="{ 'time-picker__option--selected' : option === 0 }">
+
+      <ng-container *ngIf="option !== 0">
+         <span (click)="setHour(getHoursOption(option))">{{formatNumber(getHoursOption(option))}}</span>
+         &nbsp;
+         <span (click)="setMinutes(getMinutesOption(option))">{{formatNumber(getMinutesOption(option))}}</span>
+      </ng-container>
+
+      <ng-container *ngIf="option === 0">
+         <span>{{formatNumber(hour)}}</span>
+         :
+         <span>{{formatNumber(minutes)}}</span>
+      </ng-container>
+
+   </div>
+
+   <div class="time-picker__controls">
+      <a (click)="hoursControlDown()" class="material-icons md-18">keyboard_arrow_down</a>
+      &nbsp;
+      <a (click)="minutesControlDown()" class="material-icons md-18">keyboard_arrow_down</a>
+   </div>
+</div>

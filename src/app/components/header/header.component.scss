@@ -1,19 +1,21 @@
+@import "theme";
+
 .fill-remaining-space {
-  flex: 1 1 auto;
+   flex: 1 1 auto;
 }
 
 a {
-  height: 64px;
-  line-height: 64px;
-  min-width: 64px;
-  border-radius: 0;
+   height: 64px;
+   line-height: 64px;
+   min-width: 64px;
+   border-radius: 0;
 }
 
 a.active {
-  background-color: rgba(255, 255, 255, 0.05);
-  border-bottom: 2px solid deeppink; /*TODO: use theme and scss variables*/
+   background-color: rgba(255, 255, 255, 0.05);
+   border-bottom: 3px solid $colorSecondary;
 }
 
 .brand {
-  font-size: 18px;
+   font-size: 18px;
 }

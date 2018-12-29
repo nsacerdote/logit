@@ -1,0 +1,54 @@
+@import "theme";
+
+:host {
+   position: relative;
+   display: inline-flex;
+
+   .time-picker__options {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background-color: $white;
+      z-index: 100;
+      border-radius: 2px;
+      padding-top: 4px;
+      padding-bottom: 4px;
+
+      .time-picker__option {
+         display: flex;
+         line-height: 28px;
+         span {
+            flex: 1;
+         }
+         span:hover {
+            background-color: $colorPrimaryLight;
+            color: $textOnColor;
+         }
+      }
+
+      .time-picker__option--selected {
+         background-color: $colorPrimaryLight;
+         color: $textOnColor;
+      }
+
+      .time-picker__controls {
+         display: flex;
+         line-height: 16px;
+
+         a {
+            flex: 1;
+            padding: 1px;
+            margin: 0 2px;
+         }
+
+         a:hover {
+            background-color: $colorPrimaryLight;
+            color: $textOnColor;
+         }
+      }
+
+   }
+}
+
+
