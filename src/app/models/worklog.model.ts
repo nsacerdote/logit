@@ -6,19 +6,19 @@ export enum WorklogStatus {
 }
 
 export class Worklog {
-   constructor(public startTime: string,
-               public endTime: string,
-               public description: string,
-               public issue: Issue,
-               public status: WorklogStatus) {
+   constructor(public startTime: string = null,
+               public endTime: string = null,
+               public description: string = null,
+               public issue: Issue = null,
+               public status: WorklogStatus = null) {
    }
 
-   static calcWorkedTime(startTime: string, endTime: string): string {
-      // TODO: use start and endtime to calc
-      return '0m';
+   static of(raw: any): Worklog {
+      return Object.assign(new Worklog(), raw);
    }
 
    getWorkedTime(): string {
-      return Worklog.calcWorkedTime(this.startTime, this.endTime);
+      // TODO: use start and endtime to calc
+      return '0m';
    }
 }

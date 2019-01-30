@@ -50,7 +50,9 @@ export class WorklogListItemComponent extends BaseControlValueAccessorComponent 
    }
 
    writeValue(worklog: any): void {
-      this.worklogFormGroup.patchValue(worklog);
+      if (worklog) {
+         this.worklogFormGroup.patchValue(worklog);
+      }
    }
 
    valueChangeObservable(): Observable<any> {
@@ -58,10 +60,7 @@ export class WorklogListItemComponent extends BaseControlValueAccessorComponent 
    }
 
    calcSpentTime(): string {
-      return Worklog.calcWorkedTime(
-         this.worklogFormGroup.get('startTime').value,
-         this.worklogFormGroup.get('endTime').value
-      );
+      return Worklog.of(this.worklogFormGroup.value).getWorkedTime();
    }
 
    handleTabOnLastInput(event: Event) {

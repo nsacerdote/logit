@@ -1,10 +1,11 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Worklog, WorklogStatus } from '../../../models/worklog.model';
 import { BaseControlValueAccessorComponent } from '../../../shared/base-control-value-accessor.component';
 import { Observable } from 'rxjs';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Issue } from '../../../models/issue.model';
+import * as moment from 'moment';
 
 @Component({
    selector: 'app-worklog-list',
@@ -20,6 +21,8 @@ import { Issue } from '../../../models/issue.model';
    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class WorklogListComponent extends BaseControlValueAccessorComponent implements OnInit {
+
+   @Input() worklogsDate: moment.Moment;
 
    worklogsFormArray: FormArray;
    focusIndex = -1;
@@ -53,7 +56,9 @@ export class WorklogListComponent extends BaseControlValueAccessorComponent impl
    }
 
    writeValue(worklogs: Worklog[]): void {
-      this.worklogsFormArray.reset();
+      while (this.worklogsFormArray.length !== 0) {
+         this.worklogsFormArray.removeAt(0);
+      }
       worklogs.forEach((worklog) => this.worklogsFormArray.push(new FormControl(worklog)));
    }
 
