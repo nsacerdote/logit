@@ -65,5 +65,8 @@ export class WorkdayComponent implements OnInit {
          worklogs: [workday.worklogs],
          reminder: [workday.reminders]
       });
+      this.workdayForm.valueChanges.subscribe(next => {
+         this.workday = Workday.of(next);
+      });
    }
 }

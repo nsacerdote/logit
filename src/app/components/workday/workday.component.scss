@@ -21,14 +21,14 @@
 
 form {
    flex: 1;
-   padding: 20px;
+   padding: 20px 20px 100px;
 }
 
-.bottom-components {
-   margin-top: 15px;
+.extra-components {
    display: flex;
+
+   margin-top: 15px;
    flex-direction: row;
-   justify-content: space-between;
 
    > * {
       flex: 1;
@@ -43,4 +43,31 @@ button[type="submit"] {
    position: absolute;
    bottom: 50px;
    right: 50px;
+}
+
+@include for-big-desktop-up {
+
+   form {
+      display: flex;
+      flex-direction: row;
+   }
+
+   app-worklog-list {
+      flex: 1;
+   }
+
+   .extra-components {
+      min-width: 450px;
+      margin-top: 0;
+      margin-left: 20px;
+      flex-direction: column;
+
+      > * {
+         flex: 0;
+      }
+
+      > *:first-child {
+         margin: 0 0 10px 0;
+      }
+   }
 }

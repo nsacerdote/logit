@@ -8,9 +8,9 @@
    <app-worklog-list [formControl]="workdayForm.get('worklogs')"
                      [worklogsDate]="workday.date">
    </app-worklog-list>
-   <div class="bottom-components">
+   <div class="extra-components">
       <app-reminders [remindersFormControl]="workdayForm.get('reminder')"></app-reminders>
-      <app-workday-summary></app-workday-summary>
+      <app-workday-summary [workday]="workday"></app-workday-summary>
    </div>
    <button type="submit" mat-fab><i class="material-icons md-light">send</i></button>
 </form>

@@ -6,6 +6,7 @@ import {
    MatFormFieldModule,
    MatIconModule,
    MatInputModule,
+   MatProgressBarModule,
    MatSidenavModule,
    MatToolbarModule
 } from '@angular/material';
@@ -24,7 +25,8 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
       MatDividerModule,
       DragDropModule,
       MatDatepickerModule,
-      MatMomentDateModule
+      MatMomentDateModule,
+      MatProgressBarModule
    ]
 })
 export class AppMaterialModule {

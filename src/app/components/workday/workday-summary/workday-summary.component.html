@@ -2,21 +2,23 @@
    <mat-card-subtitle>
       Summary
    </mat-card-subtitle>
-
    <mat-card-content>
-      <table class="mat-table">
-         <tr class="mat-header-row">
-            <th class="mat-header-cell">a</th>
-            <th class="mat-header-cell">a</th>
-            <th class="mat-header-cell">a</th>
-            <th class="mat-header-cell">a</th>
-         </tr>
-         <tr class="mat-row">
-            <td class="mat-cell">b</td>
-            <td class="mat-cell">b</td>
-            <td class="mat-cell">b</td>
-            <td class="mat-cell">b</td>
-         </tr>
-      </table>
+
+      <div>
+         <span>Clock In: 08:00</span>
+         <span>Clock Out: 16:45</span>
+      </div>
+
+      <div>
+         <span>Worked: 8 h</span>
+         <span>Pause: 45 m</span>
+      </div>
+
+      <mat-progress-bar
+         [ngClass]="getProgressBarClass()"
+         mode="determinate"
+         [value]="getProgressBarValue()">
+      </mat-progress-bar>
+
    </mat-card-content>
 </mat-card>

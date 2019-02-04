@@ -1,0 +1,29 @@
+@import "theme";
+
+::ng-deep {
+   .red .mat-progress-bar-fill::after {
+      background-color: #ff5c6d;
+   }
+
+   .yellow .mat-progress-bar-fill::after {
+      background-color: #ffd80f;
+   }
+
+   .green .mat-progress-bar-fill::after {
+      background-color: #75dc5d;
+   }
+
+   .mat-progress-bar-element {
+      background-color: $grey200;
+   }
+}
+
+div {
+   margin-bottom: 10px;
+}
+
+span {
+   width: 150px;
+   display: inline-block;
+}
+

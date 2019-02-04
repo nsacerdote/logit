@@ -6,4 +6,8 @@ export class Workday {
                public worklogs: Worklog[] = [],
                public reminders: string = '') {
    }
+
+   static of(raw: any): Workday {
+      return Object.assign(new Workday(), raw);
+   }
 }
