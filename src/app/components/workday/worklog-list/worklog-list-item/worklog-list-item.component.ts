@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, } from '@angular/core';
 import { FormBuilder, FormGroup, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { BaseControlValueAccessorComponent } from '../../../../shared/base-control-value-accessor.component';
 import { Observable } from 'rxjs';
@@ -29,7 +29,8 @@ export class WorklogListItemComponent extends BaseControlValueAccessorComponent 
 
    worklogFormGroup: FormGroup;
 
-   constructor(private fb: FormBuilder) {
+   constructor(private fb: FormBuilder,
+               private cdRef: ChangeDetectorRef) {
       super();
    }
 
@@ -52,6 +53,7 @@ export class WorklogListItemComponent extends BaseControlValueAccessorComponent 
    writeValue(worklog: any): void {
       if (worklog) {
          this.worklogFormGroup.patchValue(worklog);
+         this.cdRef.detectChanges();
       }
    }
 

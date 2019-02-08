@@ -8,6 +8,10 @@ export class Workday {
    }
 
    static of(raw: any): Workday {
-      return Object.assign(new Workday(), raw);
+      const result = Object.assign(new Workday(), raw);
+      for (let i = 0; i < result.worklogs.length; i++) {
+         result.worklogs[i] = Worklog.of(result.worklogs[i]);
+      }
+      return result;
    }
 }

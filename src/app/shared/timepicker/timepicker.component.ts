@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import * as moment from 'moment';
-import { TimepickerUtils } from './timepicker.utils';
+import { TimeUtils } from '../utils/time.utils';
 
 @Component({
    selector: 'app-timepicker',
@@ -74,8 +74,8 @@ export class TimepickerComponent implements OnInit {
    }
 
    private initializeControlValue() {
-      this.hour = TimepickerUtils.getClosestHour(moment(), this.minuteStep);
-      this.minutes = TimepickerUtils.getClosestMinutes(moment(), this.minuteStep);
+      this.hour = TimeUtils.getClosestHour(moment(), this.minuteStep);
+      this.minutes = TimeUtils.getClosestMinutes(moment(), this.minuteStep);
       this.updateTimePickerControlValue();
    }
 
@@ -155,7 +155,7 @@ export class TimepickerComponent implements OnInit {
    }
 
    getHoursOption(steps: number) {
-      return TimepickerUtils.keepInPositiveRange(
+      return TimeUtils.keepInPositiveRange(
          this.hour + steps,
          24
       );
@@ -176,8 +176,8 @@ export class TimepickerComponent implements OnInit {
    }
 
    getMinutesOption(steps: number) {
-      return TimepickerUtils.keepInPositiveRange(
-         TimepickerUtils.roundToStep(this.minutes, this.minuteStep) + (steps * this.minuteStep),
+      return TimeUtils.keepInPositiveRange(
+         TimeUtils.roundToStep(this.minutes, this.minuteStep) + (steps * this.minuteStep),
          60
       );
    }

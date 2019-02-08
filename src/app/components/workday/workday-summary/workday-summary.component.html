@@ -5,13 +5,13 @@
    <mat-card-content>
 
       <div>
-         <span>Clock In: 08:00</span>
-         <span>Clock Out: 16:45</span>
+         <span>Clock In: {{getClockInHour()}}</span>
+         <span>Clock Out: {{getClockOutHour()}}</span>
       </div>
 
       <div>
-         <span>Worked: 8 h</span>
-         <span>Pause: 45 m</span>
+         <span>Worked: {{getWorkedTime()}}</span>
+         <span>Pause: {{getPauseTime()}}</span>
       </div>
 
       <mat-progress-bar

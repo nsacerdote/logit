@@ -1,4 +1,6 @@
 import { Issue } from './issue.model';
+import * as moment from 'moment';
+import { TimeUtils } from '../shared/utils/time.utils';
 
 export enum WorklogStatus {
    NOT_SENT = 'NOT_SENT',
@@ -18,7 +20,23 @@ export class Worklog {
    }
 
    getWorkedTime(): string {
-      // TODO: use start and endtime to calc
-      return '0m';
+      return TimeUtils.humanizeDuration(
+         this.getWorkedDuration()
+      );
    }
+
+   getWorkedDuration(): moment.Duration {
+      const start = this.getStartTimeAsMoment();
+      const end = this.getEndTimeAsMoment();
+      return TimeUtils.getPositiveMomentsDifferenceDuration(end, start); // end - start
+   }
+
+   getStartTimeAsMoment(): moment.Moment {
+      return TimeUtils.stringToMomentTime(this.startTime);
+   }
+
+   getEndTimeAsMoment(): moment.Moment {
+      return TimeUtils.stringToMomentTime(this.endTime);
+   }
+
 }
