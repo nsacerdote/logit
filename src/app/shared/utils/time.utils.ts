@@ -39,6 +39,14 @@ export class TimeUtils {
       return moment(stringTime, 'HH:mm');
    }
 
+   public static momentDayToString(m: moment.Moment): string {
+      return m.format('YYYY-MM-DD');
+   }
+
+   public static stringToMomentDay(stringTime: string): moment.Moment {
+      return moment(stringTime, 'YYYY-MM-DD');
+   }
+
    public static getPositiveMomentsDifferenceDuration(a: moment.Moment, b: moment.Moment): moment.Duration {
       if (a.isValid() && b.isValid() && a.isAfter(b)) {
          return moment.duration(a.diff(b));

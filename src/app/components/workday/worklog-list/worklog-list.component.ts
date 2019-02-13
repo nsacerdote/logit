@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Worklog, WorklogStatus } from '../../../models/worklog.model';
 import { BaseControlValueAccessorComponent } from '../../../shared/base-control-value-accessor.component';
@@ -27,7 +27,8 @@ export class WorklogListComponent extends BaseControlValueAccessorComponent impl
    worklogsFormArray: FormArray;
    focusIndex = -1;
 
-   constructor(private fb: FormBuilder) {
+   constructor(private fb: FormBuilder,
+               private cdRef: ChangeDetectorRef) {
       super();
    }
 
@@ -60,6 +61,7 @@ export class WorklogListComponent extends BaseControlValueAccessorComponent impl
          this.worklogsFormArray.removeAt(0);
       }
       worklogs.forEach((worklog) => this.worklogsFormArray.push(new FormControl(worklog)));
+      this.cdRef.detectChanges();
    }
 
    valueChangeObservable(): Observable<any> {

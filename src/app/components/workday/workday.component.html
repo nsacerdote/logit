@@ -4,13 +4,17 @@
       (selectedChange)="handleCalendarChange($event)">
    </mat-calendar>
 </div>
-<form novalidate [formGroup]="workdayForm" (ngSubmit)="sendWorklogs()">
+
+<form *ngIf="!workdayForm">
+</form>
+
+<form *ngIf="workdayForm" novalidate [formGroup]="workdayForm" (ngSubmit)="sendWorklogs()">
    <app-worklog-list [formControl]="workdayForm.get('worklogs')"
-                     [worklogsDate]="workday.date">
+                     [worklogsDate]="loadedDate">
    </app-worklog-list>
    <div class="extra-components">
       <app-reminders [remindersFormControl]="workdayForm.get('reminder')"></app-reminders>
-      <app-workday-summary [workday]="workday"></app-workday-summary>
+      <app-workday-summary [workday]="getFormValueAsWorkday()"></app-workday-summary>
    </div>
    <button type="submit" mat-fab><i class="material-icons md-light">send</i></button>
 </form>

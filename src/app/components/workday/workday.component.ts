@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { Worklog, WorklogStatus } from '../../models/worklog.model';
-import { Issue } from '../../models/issue.model';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { BehaviorSubject, concat } from 'rxjs';
+import { skip, switchMap, take, tap } from 'rxjs/operators';
 import * as moment from 'moment';
-import { BehaviorSubject, Observable, of } from 'rxjs';
+
 import { Workday } from '../../models/workday.model';
-import { delay, map, switchMap } from 'rxjs/operators';
+import { WorkdayService } from '../../services/workday.service';
 
 @Component({
    selector: 'app-workday',
@@ -15,25 +15,32 @@ import { delay, map, switchMap } from 'rxjs/operators';
 })
 export class WorkdayComponent implements OnInit {
 
-   workday: Workday;
+   loadedDate: moment.Moment;
    workdayForm: FormGroup;
    selectedDate$: BehaviorSubject<moment.Moment>;
 
    constructor(private fb: FormBuilder,
-               private cdRef: ChangeDetectorRef) { }
+               private cdRef: ChangeDetectorRef,
+               private workdayService: WorkdayService) { }
 
    ngOnInit() {
       this.selectedDate$ = new BehaviorSubject<moment.Moment>(moment());
-      this.setWorkdayAndForm(new Workday());
+      this.loadInitialDate();
+      this.subscribeToSelectedDateChanges();
+   }
 
+   private loadInitialDate() {
       this.selectedDate$.pipe(
-         switchMap(selectedDate => this.loadWorkday(selectedDate))
-      ).subscribe(
-         workday => {
-            this.setWorkdayAndForm(workday)
-            this.cdRef.detectChanges();
-         }
-      );
+         take(1),
+         switchMap(date => this.loadDate(date))
+      ).subscribe();
+   }
+
+   private subscribeToSelectedDateChanges() {
+      this.selectedDate$.pipe(
+         skip(1),
+         switchMap(date => this.saveAndLoad(date))
+      ).subscribe();
    }
 
    sendWorklogs() {
@@ -44,29 +51,39 @@ export class WorkdayComponent implements OnInit {
       this.selectedDate$.next(newDate);
    }
 
-   private loadWorkday(date: moment.Moment): Observable<Workday> {
-      return of(
-         new Workday(
-            date,
-            [
-               new Worklog('23:56', '23:58', 'aaa' + date.format('LL'), new Issue('AAA-1', 'abc'), WorklogStatus.NOT_SENT),
-               new Worklog('2', '3', 'bbb' + date.format('LL'), new Issue('BBB-1', 'abc'), WorklogStatus.NOT_SENT)
-            ],
-            'reminder'
-         )
-      ).pipe(
-         delay(250)
-      );
-   }
-
-   private setWorkdayAndForm(workday: Workday) {
-      this.workday = workday;
+   private setWorkdayForm(workday: Workday) {
       this.workdayForm = this.fb.group({
          worklogs: [workday.worklogs],
          reminder: [workday.reminders]
       });
-      this.workdayForm.valueChanges.subscribe(next => {
-         this.workday = Workday.of(next);
-      });
+   }
+
+   private saveAndLoad(date: moment.Moment) {
+      return concat(
+         this.save(),
+         this.loadDate(date)
+      );
+   }
+
+   private save() {
+      return this.workdayService.save(this.getFormValueAsWorkday());
+   }
+
+   getFormValueAsWorkday(): Workday {
+      const workday = Workday.of(this.workdayForm.value);
+      workday.date = this.loadedDate;
+      return workday;
+   }
+
+   private loadDate(date: moment.Moment) {
+      return this.workdayService.getOrCreate(date).pipe(
+         tap(workday => this.setLoadedWorkday(workday))
+      );
+   }
+
+   private setLoadedWorkday(workday: Workday) {
+      this.loadedDate = workday.date;
+      this.setWorkdayForm(workday);
+      this.cdRef.detectChanges();
    }
 }

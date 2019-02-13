@@ -26,6 +26,10 @@ import { WorklogListItemComponent } from './components/workday/worklog-list/work
 import { RemindersComponent } from './components/workday/reminders/reminders.component';
 import { WorkdaySummaryComponent } from './components/workday/workday-summary/workday-summary.component';
 import { TimepickerComponent } from './shared/timepicker/timepicker.component';
+import { JiraApiService } from './services/jira-api.service';
+import { LoginService } from './services/login.service';
+import { SettingsService } from './services/settings.service';
+import { WorkdayService } from './services/workday.service';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -60,7 +64,13 @@ export function HttpLoaderFactory(http: HttpClient) {
          }
       })
    ],
-   providers: [ElectronService],
+   providers: [
+      ElectronService,
+      JiraApiService,
+      LoginService,
+      SettingsService,
+      WorkdayService
+   ],
    bootstrap: [AppComponent]
 })
 export class AppModule {

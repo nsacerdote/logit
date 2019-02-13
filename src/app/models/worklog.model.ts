@@ -16,7 +16,9 @@ export class Worklog {
    }
 
    static of(raw: any): Worklog {
-      return Object.assign(new Worklog(), raw);
+      const worklog = Object.assign(new Worklog(), raw);
+      worklog.issue = Issue.of(worklog.issue);
+      return worklog;
    }
 
    getWorkedTime(): string {
@@ -37,6 +39,12 @@ export class Worklog {
 
    getEndTimeAsMoment(): moment.Moment {
       return TimeUtils.stringToMomentTime(this.endTime);
+   }
+
+   getRaw(): any {
+      const raw: any = Object.assign({}, this);
+      raw.issue = raw.issue.getRaw();
+      return raw;
    }
 
 }
