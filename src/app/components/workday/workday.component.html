@@ -5,17 +5,21 @@
    </mat-calendar>
 </div>
 
-<form *ngIf="!workdayForm">
-</form>
+<form *ngIf="workdayForm && loadedDate"
+      [formGroup]="workdayForm"
+      (ngSubmit)="sendWorklogs()"
+      novalidate>
 
-<form *ngIf="workdayForm" novalidate [formGroup]="workdayForm" (ngSubmit)="sendWorklogs()">
    <app-worklog-list [formControl]="workdayForm.get('worklogs')"
                      [worklogsDate]="loadedDate">
    </app-worklog-list>
+
    <div class="extra-components">
       <app-reminders [remindersFormControl]="workdayForm.get('reminder')"></app-reminders>
       <app-workday-summary [workday]="getFormValueAsWorkday()"></app-workday-summary>
    </div>
+
    <button type="submit" mat-fab><i class="material-icons md-light">send</i></button>
+
 </form>
 

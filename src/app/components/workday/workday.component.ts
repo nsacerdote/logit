@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { BehaviorSubject, concat } from 'rxjs';
-import { skip, switchMap, take, tap } from 'rxjs/operators';
+import { skip, switchMap, tap } from 'rxjs/operators';
 import * as moment from 'moment';
 
 import { Workday } from '../../models/workday.model';
@@ -24,38 +24,29 @@ export class WorkdayComponent implements OnInit {
                private workdayService: WorkdayService) { }
 
    ngOnInit() {
-      this.selectedDate$ = new BehaviorSubject<moment.Moment>(moment());
-      this.loadInitialDate();
-      this.subscribeToSelectedDateChanges();
+      const initialDate = moment();
+      this.selectedDate$ = new BehaviorSubject<moment.Moment>(initialDate);
+      this.loadDate(initialDate).subscribe();
+      this.subscribeToSelectedDate();
    }
 
-   private loadInitialDate() {
-      this.selectedDate$.pipe(
-         take(1),
-         switchMap(date => this.loadDate(date))
-      ).subscribe();
+   private loadDate(date: moment.Moment) {
+      return this.workdayService.getOrCreate(date).pipe(
+         tap(workday => this.setLoadedWorkday(workday))
+      );
    }
 
-   private subscribeToSelectedDateChanges() {
+   private subscribeToSelectedDate() {
       this.selectedDate$.pipe(
          skip(1),
          switchMap(date => this.saveAndLoad(date))
       ).subscribe();
    }
 
-   sendWorklogs() {
-      console.log(this.workdayForm.value);
-   }
-
-   handleCalendarChange(newDate: moment.Moment) {
-      this.selectedDate$.next(newDate);
-   }
-
-   private setWorkdayForm(workday: Workday) {
-      this.workdayForm = this.fb.group({
-         worklogs: [workday.worklogs],
-         reminder: [workday.reminders]
-      });
+   private setLoadedWorkday(workday: Workday) {
+      this.loadedDate = workday.date;
+      this.setWorkdayForm(workday);
+      this.cdRef.detectChanges();
    }
 
    private saveAndLoad(date: moment.Moment) {
@@ -63,6 +54,13 @@ export class WorkdayComponent implements OnInit {
          this.save(),
          this.loadDate(date)
       );
+   }
+
+   private setWorkdayForm(workday: Workday) {
+      this.workdayForm = this.fb.group({
+         worklogs: [workday.worklogs],
+         reminder: [workday.reminders]
+      });
    }
 
    private save() {
@@ -75,15 +73,11 @@ export class WorkdayComponent implements OnInit {
       return workday;
    }
 
-   private loadDate(date: moment.Moment) {
-      return this.workdayService.getOrCreate(date).pipe(
-         tap(workday => this.setLoadedWorkday(workday))
-      );
+   handleCalendarChange(newDate: moment.Moment) {
+      this.selectedDate$.next(newDate);
    }
 
-   private setLoadedWorkday(workday: Workday) {
-      this.loadedDate = workday.date;
-      this.setWorkdayForm(workday);
-      this.cdRef.detectChanges();
+   sendWorklogs() {
+      console.log(this.workdayForm.value);
    }
 }

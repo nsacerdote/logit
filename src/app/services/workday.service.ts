@@ -25,10 +25,7 @@ export class WorkdayService {
    save(workday: Workday): Observable<Workday> {
       return this.upsert(workday)
          .pipe(
-            map(workdayDoc => {
-               console.log('saved', workdayDoc);
-               return Workday.of(workdayDoc);
-            })
+            map(workdayDoc => Workday.of(workdayDoc))
          );
    }
 
@@ -38,7 +35,6 @@ export class WorkdayService {
             map(upsertResult => upsertResult[1])
          );
    }
-
 
    getOrCreate(date: moment.Moment): Observable<Workday> {
       return this.get(date)
