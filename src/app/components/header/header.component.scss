@@ -1,5 +1,3 @@
-@import "theme";
-
 .fill-remaining-space {
    flex: 1 1 auto;
 }
@@ -12,8 +10,7 @@ a {
 }
 
 a.active {
-   background-color: rgba(255, 255, 255, 0.05);
-   border-bottom: 3px solid $colorSecondary;
+   background-color: rgba(255, 255, 255, 0.15);
 }
 
 .brand {

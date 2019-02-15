@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { BehaviorSubject, concat } from 'rxjs';
-import { skip, switchMap, tap } from 'rxjs/operators';
+import { BehaviorSubject, concat, of } from 'rxjs';
+import { delay, skip, switchMap, tap } from 'rxjs/operators';
 import * as moment from 'moment';
 
 import { Workday } from '../../models/workday.model';
@@ -18,6 +18,7 @@ export class WorkdayComponent implements OnInit {
    loadedDate: moment.Moment;
    workdayForm: FormGroup;
    selectedDate$: BehaviorSubject<moment.Moment>;
+   private sendingWorklogs = false;
 
    constructor(private fb: FormBuilder,
                private cdRef: ChangeDetectorRef,
@@ -74,10 +75,22 @@ export class WorkdayComponent implements OnInit {
    }
 
    handleCalendarChange(newDate: moment.Moment) {
-      this.selectedDate$.next(newDate);
+      if (!this.sendingWorklogs) {
+         this.selectedDate$.next(newDate);
+      }
    }
 
    sendWorklogs() {
-      console.log(this.workdayForm.value);
+      this.sendingWorklogs = true;
+      this.serviceSendWorklogsDummy()
+         .subscribe(() => {
+            this.sendingWorklogs = false;
+            this.cdRef.detectChanges();
+         });
    }
+
+   serviceSendWorklogsDummy() {
+      return of(1).pipe(delay(2500));
+   }
+
 }

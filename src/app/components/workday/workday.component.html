@@ -1,5 +1,11 @@
+<div class="load-bar" *ngIf="sendingWorklogs">
+   <div class="bar"></div>
+   <div class="bar"></div>
+</div>
+
 <div class="sidebar">
    <mat-calendar
+      [ngClass]="{ disabled : sendingWorklogs }"
       [selected]="selectedDate$ | async"
       (selectedChange)="handleCalendarChange($event)">
    </mat-calendar>
