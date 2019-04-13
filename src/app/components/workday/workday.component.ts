@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { BehaviorSubject, concat, of } from 'rxjs';
-import { delay, skip, switchMap, tap } from 'rxjs/operators';
+import { BehaviorSubject, concat } from 'rxjs';
+import { skip, switchMap, tap } from 'rxjs/operators';
 import * as moment from 'moment';
 
 import { Workday } from '../../models/workday.model';
 import { WorkdayService } from '../../services/workday.service';
+import { JiraApiService } from '../../services/jira-api.service';
 
 @Component({
    selector: 'app-workday',
@@ -18,11 +19,12 @@ export class WorkdayComponent implements OnInit {
    loadedDate: moment.Moment;
    workdayForm: FormGroup;
    selectedDate$: BehaviorSubject<moment.Moment>;
-   private sendingWorklogs = false;
+   sendingWorklogs = false;
 
    constructor(private fb: FormBuilder,
                private cdRef: ChangeDetectorRef,
-               private workdayService: WorkdayService) { }
+               private workdayService: WorkdayService,
+               private jiraApiService: JiraApiService) { }
 
    ngOnInit() {
       const initialDate = moment();
@@ -82,15 +84,17 @@ export class WorkdayComponent implements OnInit {
 
    sendWorklogs() {
       this.sendingWorklogs = true;
-      this.serviceSendWorklogsDummy()
+      this.sendWorklogsToJira()
          .subscribe(() => {
             this.sendingWorklogs = false;
             this.cdRef.detectChanges();
          });
    }
 
-   serviceSendWorklogsDummy() {
-      return of(1).pipe(delay(2500));
+   sendWorklogsToJira() {
+      return this.jiraApiService.sendWorklogs(
+         this.getFormValueAsWorkday().worklogs
+      );
    }
 
 }
