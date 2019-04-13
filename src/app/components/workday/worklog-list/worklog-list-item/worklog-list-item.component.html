@@ -18,8 +18,7 @@
   </textarea>
 </td>
 <td class="mat-cell issue">
-   <input class="input" placeholder="ABC-100"
-          [formControl]="worklogFormGroup.get('issue').get('key')">
+   <app-issue-autocomplete [disabled]="disabled" [formControl]="worklogFormGroup.get('issue')"></app-issue-autocomplete>
 </td>
 <td class="mat-cell status">
    {{ worklogFormGroup.get('status').value }}

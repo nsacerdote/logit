@@ -26,6 +26,7 @@ import { WorklogListItemComponent } from './components/workday/worklog-list/work
 import { RemindersComponent } from './components/workday/reminders/reminders.component';
 import { WorkdaySummaryComponent } from './components/workday/workday-summary/workday-summary.component';
 import { TimepickerComponent } from './shared/timepicker/timepicker.component';
+import { IssueAutocompleteComponent } from './shared/issue-autocomplete/issue-autocomplete.component';
 import { JiraApiService } from './services/jira-api.service';
 import { LoginService } from './services/login.service';
 import { SettingsService } from './services/settings.service';
@@ -46,7 +47,8 @@ export function HttpLoaderFactory(http: HttpClient) {
       WorklogListItemComponent,
       RemindersComponent,
       WorkdaySummaryComponent,
-      TimepickerComponent
+      TimepickerComponent,
+      IssueAutocompleteComponent
    ],
    imports: [
       BrowserModule,

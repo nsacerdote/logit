@@ -39,10 +39,10 @@ export class WorklogListItemComponent extends BaseControlValueAccessorComponent 
          'startTime': '',
          'endTime': '',
          'description': '',
-         'issue': this.fb.group({
+         'issue': {
             'key': '',
             'description': '',
-         }),
+         },
          'status': ''
       });
       if (this.disabled) {
