@@ -24,7 +24,7 @@
    {{ worklogFormGroup.get('status').value }}
 </td>
 <td class="mat-cell actions">
-   <button mat-icon-button *ngIf="!disabled"
+   <button mat-icon-button *ngIf="!disabled" type="button"
            (click)="deleteRowClicked()"
            (keydown.Tab)="handleTabOnLastInput($event)">
       <mat-icon class="md-dark" aria-label="Remove Worklog">delete</mat-icon>

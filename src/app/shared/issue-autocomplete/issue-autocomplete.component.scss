@@ -1,0 +1,37 @@
+@import "theme";
+
+:host {
+   position: relative;
+   display: inline-flex;
+}
+
+.issue-autocomplete__options {
+   position: absolute;
+   top: 100%;
+   left: -25px;
+   background-color: $white;
+   z-index: 100;
+   border-radius: 2px;
+   padding-top: 4px;
+   padding-bottom: 4px;
+}
+
+.issue-autocomplete__option {
+   line-height: 28px;
+   padding: 0 16px;
+   min-width: 200px;
+   max-width: 500px;
+   white-space: nowrap;
+   overflow: hidden;
+   text-overflow: ellipsis;
+   text-align: left;
+}
+
+.issue-autocomplete__option:hover {
+   @extend .issue-autocomplete__option--selected;
+}
+
+.issue-autocomplete__option--selected {
+   background-color: $colorPrimaryLight;
+   color: $textOnColor;
+}

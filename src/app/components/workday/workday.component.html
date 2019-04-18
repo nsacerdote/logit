@@ -25,7 +25,7 @@
       <app-workday-summary [workday]="getFormValueAsWorkday()"></app-workday-summary>
    </div>
 
-   <button type="submit" mat-fab><i class="material-icons md-light">send</i></button>
+   <button type="button" (click)="sendWorklogs()" mat-fab><i class="material-icons md-light">send</i></button>
 
 </form>
 

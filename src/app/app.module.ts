@@ -31,6 +31,7 @@ import { JiraApiService } from './services/jira-api.service';
 import { LoginService } from './services/login.service';
 import { SettingsService } from './services/settings.service';
 import { WorkdayService } from './services/workday.service';
+import { IssueAutocompleteService } from './services/issue-autocomplete.service';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -71,7 +72,8 @@ export function HttpLoaderFactory(http: HttpClient) {
       JiraApiService,
       LoginService,
       SettingsService,
-      WorkdayService
+      WorkdayService,
+      IssueAutocompleteService
    ],
    bootstrap: [AppComponent]
 })
