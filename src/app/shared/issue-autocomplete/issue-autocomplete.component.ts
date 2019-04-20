@@ -2,7 +2,17 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy
 import { FormBuilder, FormGroup, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { BaseControlValueAccessorComponent } from '../base-control-value-accessor.component';
 import { concat, Observable, Subject, Subscription } from 'rxjs';
-import { debounceTime, distinctUntilChanged, filter, scan, share, shareReplay, switchMap, tap, withLatestFrom } from 'rxjs/operators';
+import {
+   debounceTime,
+   distinctUntilChanged,
+   filter,
+   scan,
+   share,
+   shareReplay,
+   switchMap,
+   tap,
+   withLatestFrom
+} from 'rxjs/operators';
 import { IssueAutocompleteService } from '../../services/issue-autocomplete.service';
 import { Issue } from '../../models/issue.model';
 import { TimeUtils } from '../utils/time.utils';
@@ -23,10 +33,10 @@ import { TimeUtils } from '../utils/time.utils';
 export class IssueAutocompleteComponent extends BaseControlValueAccessorComponent implements OnInit, OnDestroy {
 
    private readonly SELECTION_EVENTS = {
-      NEXT : 'NEXT',
-      PREVIOUS : 'PREVIOUS',
-      RESET : 'RESET',
-      SELECT : 'SELECT'
+      NEXT: 'NEXT',
+      PREVIOUS: 'PREVIOUS',
+      RESET: 'RESET',
+      SELECT: 'SELECT'
    };
 
    @Input() disabled = false;
