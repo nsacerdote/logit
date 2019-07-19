@@ -22,7 +22,7 @@ export class TimepickerComponent implements OnInit {
    @Input() shouldFocus = false;
    @Input() timePickerControl: FormControl;
 
-   @ViewChild('inputElement') input: ElementRef;
+   @ViewChild('inputElement', { static: true }) input: ElementRef;
 
    options = [-2, -1, 0, 1, 2];
    hour = 0;
