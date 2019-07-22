@@ -1,6 +1,7 @@
 import * as Nedb from 'nedb';
 import { bindNodeCallback, Observable } from 'rxjs';
 import { GenericDocEntity } from './generic-doc.entity';
+import { map } from 'rxjs/operators';
 
 export class Database<T extends GenericDocEntity> {
 
@@ -10,14 +11,25 @@ export class Database<T extends GenericDocEntity> {
       this.database = new Nedb({ filename: `./db/${databaseName}.db`, autoload: true , timestampData: true});
    }
 
-   upsert(doc: T): Observable<[number, T, boolean]> {
+   upsert(doc: T): Observable<T> {
       const toSaveDoc: any = doc.getRaw();
       toSaveDoc._id = doc.getId();
-      return this.bindMethod(this.database.update)({ _id: toSaveDoc._id }, toSaveDoc, { upsert: true , returnUpdatedDocs : true});
+      const bindedUpdate = this.bindMethod(this.database.update);
+      return bindedUpdate(
+         { _id : toSaveDoc._id },
+         toSaveDoc,
+         { upsert: true, returnUpdatedDocs: true }
+      ).pipe(
+         map(upsertResult => upsertResult[1])
+      );
    }
 
-   find(_id: string): Observable<T> {
+   findById(_id: string): Observable<T> {
       return this.bindMethod(this.database.findOne)({ _id: _id });
+   }
+
+   find(query: any): Observable<T[]> {
+      return this.bindMethod(this.database.find)(query);
    }
 
    private bindMethod(method) {

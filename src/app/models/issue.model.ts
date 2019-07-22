@@ -1,4 +1,6 @@
-export class Issue {
+import { GenericDocEntity } from '../entity/generic-doc.entity';
+
+export class Issue implements GenericDocEntity {
    constructor(public key: string = '',
                public description: string = '') {
    }
@@ -9,5 +11,9 @@ export class Issue {
 
    getRaw(): any {
       return Object.assign({}, this);
+   }
+
+   getId(): string {
+      return this.key;
    }
 }

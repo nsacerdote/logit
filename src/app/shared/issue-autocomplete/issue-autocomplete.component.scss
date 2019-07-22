@@ -7,6 +7,8 @@
 
 .issue-autocomplete__options {
    position: absolute;
+   max-height: 400px;
+   overflow-y: auto;
    top: 100%;
    left: -25px;
    background-color: $white;

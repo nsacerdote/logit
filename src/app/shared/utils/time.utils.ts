@@ -7,7 +7,9 @@ export class TimeUtils {
    }
 
    public static keepInPositiveRange(a: number, rangeMax: number) {
-      if (a >= 0 && a < rangeMax) {
+      if (rangeMax <= 0) {
+         return 0;
+      } else  if (a >= 0 && a < rangeMax) {
          return a;
       } else if (a < 0) {
          return this.keepInPositiveRange(a + rangeMax, rangeMax);

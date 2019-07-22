@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { BaseControlValueAccessorComponent } from '../base-control-value-accessor.component';
-import { concat, Observable, Subject, Subscription } from 'rxjs';
+import { Observable, Subject, Subscription } from 'rxjs';
 import {
    debounceTime,
    distinctUntilChanged,
@@ -144,11 +144,7 @@ export class IssueAutocompleteComponent extends BaseControlValueAccessorComponen
       this.$options = this.$input.pipe(
          debounceTime(100),
          distinctUntilChanged(),
-         switchMap(input => concat(
-            this.issueAutocompleteService.searchIssuesFromCache(input).pipe(tap(() => this.resetSelection())),
-            this.issueAutocompleteService.searchIssues(input)
-            )
-         ),
+         switchMap(input => this.issueAutocompleteService.search(input)),
          share()
       );
    }

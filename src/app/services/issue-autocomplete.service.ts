@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { delay } from 'rxjs/operators';
+import { concat, Observable } from 'rxjs';
 import { Issue } from '../models/issue.model';
 import { JiraApiService } from './jira-api.service';
+import { IssueCacheService } from './issue-cache.service';
+import { scan, tap } from 'rxjs/operators';
+import * as _ from 'lodash';
 
 
 /**
@@ -11,14 +13,39 @@ import { JiraApiService } from './jira-api.service';
 @Injectable()
 export class IssueAutocompleteService {
 
-   constructor(private jiraApiService: JiraApiService) {}
+   constructor(private jiraApiService: JiraApiService,
+               private issueCacheService: IssueCacheService) {}
 
-   searchIssuesFromCache(searchText: string): Observable<Issue[]> {
-      return of([new Issue('ABC-123', searchText.repeat(10))]).pipe(delay(100));
+
+   search(searchText: string): Observable<Issue[]> {
+      return concat(
+         this.searchIssuesFromCache(searchText),
+         this.searchIssues(searchText)
+      ).pipe(
+         scan((acc, issues) => mergeIssues(issues, acc), [])
+      );
+
+      function mergeIssues(issues: Issue[], acc: Issue[]) {
+         return _.sortBy(
+            _.unionBy(issues, acc, 'key'),
+            'key'
+         );
+      }
    }
 
-   searchIssues(searchText: string): Observable<Issue[]> {
-      return this.jiraApiService.searchIssues(searchText);
+   private searchIssuesFromCache(searchText: string): Observable<Issue[]> {
+      return this.issueCacheService.search(searchText);
+   }
+
+   private searchIssues(searchText: string): Observable<Issue[]> {
+      return this.jiraApiService.searchIssues(searchText)
+         .pipe(
+            tap(
+               issues => issues.forEach(
+                  i => this.issueCacheService.save(i).subscribe()
+               )
+            )
+         );
    }
 
 }

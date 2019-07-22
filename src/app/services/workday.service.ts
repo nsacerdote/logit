@@ -30,10 +30,7 @@ export class WorkdayService {
    }
 
    private upsert(workday: Workday): Observable<Workday> {
-      return this.workdayDb.upsert(workday)
-         .pipe(
-            map(upsertResult => upsertResult[1])
-         );
+      return this.workdayDb.upsert(workday);
    }
 
    getOrCreate(date: moment.Moment): Observable<Workday> {
@@ -46,7 +43,7 @@ export class WorkdayService {
    }
 
    private get(date: moment.Moment): Observable<Workday> {
-      return this.workdayDb.find(TimeUtils.momentDayToString(date));
+      return this.workdayDb.findById(TimeUtils.momentDayToString(date));
    }
 
    private create(date: moment.Moment) {
