@@ -9,8 +9,7 @@ describe('IssueAutocompleteComponent', () => {
    beforeEach(async(() => {
       TestBed.configureTestingModule({
          declarations: [IssueAutocompleteComponent]
-      })
-         .compileComponents();
+      }).compileComponents();
    }));
 
    beforeEach(() => {

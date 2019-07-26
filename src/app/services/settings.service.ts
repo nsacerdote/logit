@@ -6,11 +6,9 @@ import { Observable, of } from 'rxjs';
  */
 @Injectable()
 export class SettingsService {
-
    constructor() {}
 
    getJiraUrl(): Observable<string> {
       return of('http://admin:admin@localhost:2990/jira');
    }
-
 }

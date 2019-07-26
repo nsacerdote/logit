@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
+import {
+   ChangeDetectionStrategy,
+   ChangeDetectorRef,
+   Component,
+   Input,
+   OnDestroy,
+   OnInit
+} from '@angular/core';
 import { FormBuilder, FormGroup, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { BaseControlValueAccessorComponent } from '../base-control-value-accessor.component';
 import { Observable, Subject, Subscription } from 'rxjs';
@@ -30,8 +37,9 @@ import { TimeUtils } from '../utils/time.utils';
    ],
    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class IssueAutocompleteComponent extends BaseControlValueAccessorComponent implements OnInit, OnDestroy {
-
+export class IssueAutocompleteComponent
+   extends BaseControlValueAccessorComponent
+   implements OnInit, OnDestroy {
    private readonly SELECTION_EVENTS = {
       NEXT: 'NEXT',
       PREVIOUS: 'PREVIOUS',
@@ -52,16 +60,18 @@ export class IssueAutocompleteComponent extends BaseControlValueAccessorComponen
    private $selectedOptionEvents: Subject<string>;
    private selectedOptionEventSubscription: Subscription;
 
-   constructor(private fb: FormBuilder,
-               private cdRef: ChangeDetectorRef,
-               private issueAutocompleteService: IssueAutocompleteService) {
+   constructor(
+      private fb: FormBuilder,
+      private cdRef: ChangeDetectorRef,
+      private issueAutocompleteService: IssueAutocompleteService
+   ) {
       super();
    }
 
    ngOnInit() {
       this.issueGroup = this.fb.group({
-         'key': {value: '', disabled: this.disabled},
-         'description': {value: '', disabled: this.disabled}
+         key: { value: '', disabled: this.disabled },
+         description: { value: '', disabled: this.disabled }
       });
 
       this.$input = new Subject<string>();
@@ -156,7 +166,9 @@ export class IssueAutocompleteComponent extends BaseControlValueAccessorComponen
             if (event === this.SELECTION_EVENTS.RESET) {
                return null;
             }
-            const currentIndex = options.findIndex(o => acc && acc.key === o.key);
+            const currentIndex = options.findIndex(
+               o => acc && acc.key === o.key
+            );
             let newIndex;
             if (event === this.SELECTION_EVENTS.NEXT) {
                newIndex = currentIndex + 1;
@@ -165,18 +177,22 @@ export class IssueAutocompleteComponent extends BaseControlValueAccessorComponen
             } else {
                newIndex = currentIndex;
             }
-            return options[TimeUtils.keepInPositiveRange(newIndex, options.length)];
+            return options[
+               TimeUtils.keepInPositiveRange(newIndex, options.length)
+            ];
          }, null),
          shareReplay(1)
       );
    }
 
    private watchForOptionSelectedEvent() {
-      this.selectedOptionEventSubscription = this.$selectedOptionEvents.pipe(
-         filter(e => e === this.SELECTION_EVENTS.SELECT),
-         withLatestFrom(this.$selectedOption),
-         tap(([_, option]) => this.selectOption(option))
-      ).subscribe();
+      this.selectedOptionEventSubscription = this.$selectedOptionEvents
+         .pipe(
+            filter(e => e === this.SELECTION_EVENTS.SELECT),
+            withLatestFrom(this.$selectedOption),
+            tap(([_, option]) => this.selectOption(option))
+         )
+         .subscribe();
    }
 
    ngOnDestroy(): void {

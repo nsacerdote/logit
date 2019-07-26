@@ -17,7 +17,6 @@ import { TimeUtils } from '../utils/time.utils';
    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TimepickerComponent implements OnInit {
-
    @Input() minuteStep = 5;
    @Input() shouldFocus = false;
    @Input() timePickerControl: FormControl;
@@ -29,8 +28,7 @@ export class TimepickerComponent implements OnInit {
    minutes = 0;
    showTimeSelector = false;
 
-   constructor() {
-   }
+   constructor() {}
 
    ngOnInit() {
       if (this.shouldFocus) {
@@ -41,11 +39,11 @@ export class TimepickerComponent implements OnInit {
    }
 
    get htmlInput(): HTMLInputElement {
-      return (<HTMLInputElement>this.input.nativeElement);
+      return <HTMLInputElement>this.input.nativeElement;
    }
 
    get controlValue(): string {
-      return (<string>this.timePickerControl.value);
+      return <string>this.timePickerControl.value;
    }
 
    onFocus() {
@@ -86,8 +84,14 @@ export class TimepickerComponent implements OnInit {
       }
       const hours = +parts[0];
       const minutes = +parts[1];
-      return Number.isInteger(hours) && hours >= 0 && hours < 24 &&
-         Number.isInteger(minutes) && minutes >= 0 && minutes < 60;
+      return (
+         Number.isInteger(hours) &&
+         hours >= 0 &&
+         hours < 24 &&
+         Number.isInteger(minutes) &&
+         minutes >= 0 &&
+         minutes < 60
+      );
    }
 
    private updateTimePickerControlValue() {
@@ -155,10 +159,7 @@ export class TimepickerComponent implements OnInit {
    }
 
    getHoursOption(steps: number) {
-      return TimeUtils.keepInPositiveRange(
-         this.hour + steps,
-         24
-      );
+      return TimeUtils.keepInPositiveRange(this.hour + steps, 24);
    }
 
    minutesControlUp() {
@@ -177,7 +178,8 @@ export class TimepickerComponent implements OnInit {
 
    getMinutesOption(steps: number) {
       return TimeUtils.keepInPositiveRange(
-         TimeUtils.roundToStep(this.minutes, this.minuteStep) + (steps * this.minuteStep),
+         TimeUtils.roundToStep(this.minutes, this.minuteStep) +
+            steps * this.minuteStep,
          60
       );
    }
@@ -188,21 +190,23 @@ export class TimepickerComponent implements OnInit {
    }
 
    private subscribeToInputChanges() {
-      this.timePickerControl.valueChanges.subscribe(
-         () => this.updateInternalValues()
+      this.timePickerControl.valueChanges.subscribe(() =>
+         this.updateInternalValues()
       );
    }
 
    private updateInternalValues() {
       const values = this.controlValue.split(':');
       if (values.length === 2 && this.isTimePickerControlValueValid()) {
-         this.hour = +(values[0]);
-         this.minutes = +(values[1]);
+         this.hour = +values[0];
+         this.minutes = +values[1];
       }
    }
 
    private isCursorInHourZone() {
-      return this.htmlInput.selectionStart >= 0 && this.htmlInput.selectionStart < 3;
+      return (
+         this.htmlInput.selectionStart >= 0 && this.htmlInput.selectionStart < 3
+      );
    }
 
    private isCursorInMinutesZone() {

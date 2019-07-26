@@ -9,8 +9,7 @@ describe('WorkdayComponent', () => {
    beforeEach(async(() => {
       TestBed.configureTestingModule({
          declarations: [WorkdayComponent]
-      })
-         .compileComponents();
+      }).compileComponents();
    }));
 
    beforeEach(() => {

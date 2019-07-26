@@ -9,13 +9,8 @@ import { AppMaterialModule } from './shared/app-material.module';
 describe('AppComponent', () => {
    beforeEach(async(() => {
       TestBed.configureTestingModule({
-         declarations: [
-            AppComponent,
-            HeaderComponent
-         ],
-         providers: [
-            ElectronService
-         ],
+         declarations: [AppComponent, HeaderComponent],
+         providers: [ElectronService],
          imports: [
             RouterTestingModule,
             TranslateModule.forRoot(),
@@ -32,6 +27,5 @@ describe('AppComponent', () => {
 });
 
 class TranslateServiceStub {
-   setDefaultLang(lang: string): void {
-   }
+   setDefaultLang(lang: string): void {}
 }

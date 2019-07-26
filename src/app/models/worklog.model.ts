@@ -8,12 +8,13 @@ export enum WorklogStatus {
 }
 
 export class Worklog {
-   constructor(public startTime: string = null,
-               public endTime: string = null,
-               public description: string = null,
-               public issue: Issue = null,
-               public status: WorklogStatus = null) {
-   }
+   constructor(
+      public startTime: string = null,
+      public endTime: string = null,
+      public description: string = null,
+      public issue: Issue = null,
+      public status: WorklogStatus = null
+   ) {}
 
    static of(raw: any): Worklog {
       const worklog = Object.assign(new Worklog(), raw);
@@ -22,9 +23,7 @@ export class Worklog {
    }
 
    getWorkedTime(): string {
-      return TimeUtils.humanizeDuration(
-         this.getWorkedDuration()
-      );
+      return TimeUtils.humanizeDuration(this.getWorkedDuration());
    }
 
    getWorkedDuration(): moment.Duration {
@@ -46,5 +45,4 @@ export class Worklog {
       raw.issue = raw.issue.getRaw();
       return raw;
    }
-
 }

@@ -1,15 +1,14 @@
 import * as moment from 'moment';
 
 export class TimeUtils {
-
    public static roundToStep(a: number, step: number) {
-      return Math.round((a) / (step)) * (step);
+      return Math.round(a / step) * step;
    }
 
    public static keepInPositiveRange(a: number, rangeMax: number) {
       if (rangeMax <= 0) {
          return 0;
-      } else  if (a >= 0 && a < rangeMax) {
+      } else if (a >= 0 && a < rangeMax) {
          return a;
       } else if (a < 0) {
          return this.keepInPositiveRange(a + rangeMax, rangeMax);
@@ -18,17 +17,26 @@ export class TimeUtils {
       }
    }
 
-   public static getClosestHour(date: moment.Moment, minuteStep: number): number {
-      const stringHour =  this.getRoundedTime(date, minuteStep).format('HH');
+   public static getClosestHour(
+      date: moment.Moment,
+      minuteStep: number
+   ): number {
+      const stringHour = this.getRoundedTime(date, minuteStep).format('HH');
       return +stringHour;
    }
 
-   public static getClosestMinutes(date: moment.Moment, minuteStep: number): number {
-      const stringMinutes =  this.getRoundedTime(date, minuteStep).format('mm');
+   public static getClosestMinutes(
+      date: moment.Moment,
+      minuteStep: number
+   ): number {
+      const stringMinutes = this.getRoundedTime(date, minuteStep).format('mm');
       return +stringMinutes;
    }
 
-   private static getRoundedTime(date: moment.Moment, minuteStep: number): moment.Moment {
+   private static getRoundedTime(
+      date: moment.Moment,
+      minuteStep: number
+   ): moment.Moment {
       const stepDuration = moment.duration(minuteStep, 'minutes');
       return moment(this.roundToStep(+date, +stepDuration));
    }
@@ -49,7 +57,10 @@ export class TimeUtils {
       return moment(stringTime, 'YYYY-MM-DD');
    }
 
-   public static getPositiveMomentsDifferenceDuration(a: moment.Moment, b: moment.Moment): moment.Duration {
+   public static getPositiveMomentsDifferenceDuration(
+      a: moment.Moment,
+      b: moment.Moment
+   ): moment.Duration {
       if (a.isValid() && b.isValid() && a.isAfter(b)) {
          return moment.duration(a.diff(b));
       }
@@ -70,7 +81,10 @@ export class TimeUtils {
       return result;
    }
 
-   static getPositiveDurationDifference(a: moment.Duration, b: moment.Duration): moment.Duration {
+   static getPositiveDurationDifference(
+      a: moment.Duration,
+      b: moment.Duration
+   ): moment.Duration {
       if (a.asMilliseconds() > b.asMilliseconds()) {
          return a.subtract(b);
       }

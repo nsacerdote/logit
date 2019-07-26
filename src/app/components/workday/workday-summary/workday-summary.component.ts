@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import {
+   ChangeDetectionStrategy,
+   Component,
+   Input,
+   OnInit
+} from '@angular/core';
 import * as moment from 'moment';
 import { Workday } from '../../../models/workday.model';
 import { Worklog } from '../../../models/worklog.model';
@@ -11,20 +16,15 @@ import { TimeUtils } from '../../../shared/utils/time.utils';
    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class WorkdaySummaryComponent implements OnInit {
-
    @Input() workHoursPerDay = 8;
    @Input() workday: Workday;
 
-   constructor() {
-   }
+   constructor() {}
 
-   ngOnInit() {
-   }
+   ngOnInit() {}
 
    getClockInHour(): string {
-      return TimeUtils.momentTimeToString(
-         this.getClockInMoment()
-      );
+      return TimeUtils.momentTimeToString(this.getClockInMoment());
    }
 
    private getClockInMoment(): moment.Moment {
@@ -36,9 +36,7 @@ export class WorkdaySummaryComponent implements OnInit {
    }
 
    getClockOutHour(): string {
-      return TimeUtils.momentTimeToString(
-         this.getClockOutMoment()
-      );
+      return TimeUtils.momentTimeToString(this.getClockOutMoment());
    }
 
    private getClockOutMoment(): moment.Moment {
@@ -50,9 +48,7 @@ export class WorkdaySummaryComponent implements OnInit {
    }
 
    getWorkedTime(): string {
-      return TimeUtils.humanizeDuration(
-         this.getTotalWorkedDuration()
-      );
+      return TimeUtils.humanizeDuration(this.getTotalWorkedDuration());
    }
 
    private getTotalWorkedDuration(): moment.Duration {
@@ -63,36 +59,38 @@ export class WorkdaySummaryComponent implements OnInit {
    }
 
    private getWorklogsDurations() {
-      return this.workday.worklogs.map(
-         (worklog: Worklog) => worklog.getWorkedDuration()
+      return this.workday.worklogs.map((worklog: Worklog) =>
+         worklog.getWorkedDuration()
       );
    }
 
    getPauseTime(): string {
       const pauseDuration = this.getPauseDuration();
-      return TimeUtils.humanizeDuration(
-         pauseDuration
-      );
+      return TimeUtils.humanizeDuration(pauseDuration);
    }
 
    private getPauseDuration() {
       const pauseDuration = moment.duration(0);
       if (this.workday.worklogs.length > 1) {
          const worklogs = this.getSortedWorklogs();
-         worklogs.reduce(
-            (previousWorklog, currentWorklog) => {
-               pauseDuration.add(this.calcPauseDuration(previousWorklog, currentWorklog));
-               return currentWorklog;
-            }
-         );
+         worklogs.reduce((previousWorklog, currentWorklog) => {
+            pauseDuration.add(
+               this.calcPauseDuration(previousWorklog, currentWorklog)
+            );
+            return currentWorklog;
+         });
       }
       return pauseDuration;
    }
 
    private getSortedWorklogs() {
-      return this.workday.worklogs.slice(0).sort(
-         (a, b) => a.getStartTimeAsMoment().valueOf() - b.getStartTimeAsMoment().valueOf()
-      );
+      return this.workday.worklogs
+         .slice(0)
+         .sort(
+            (a, b) =>
+               a.getStartTimeAsMoment().valueOf() -
+               b.getStartTimeAsMoment().valueOf()
+         );
    }
 
    private calcPauseDuration(prevWorklog: Worklog, currentWorklog: Worklog) {
@@ -103,7 +101,11 @@ export class WorkdaySummaryComponent implements OnInit {
    }
 
    getProgressBarValue(): number {
-      return (this.getTotalWorkedDuration().asMinutes() / (this.workHoursPerDay * 60) ) * 100;
+      return (
+         (this.getTotalWorkedDuration().asMinutes() /
+            (this.workHoursPerDay * 60)) *
+         100
+      );
    }
 
    getProgressBarClass(): string {

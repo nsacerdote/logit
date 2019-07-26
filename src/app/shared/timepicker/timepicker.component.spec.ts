@@ -9,8 +9,7 @@ describe('TimepickerComponent', () => {
    beforeEach(async(() => {
       TestBed.configureTestingModule({
          declarations: [TimepickerComponent]
-      })
-         .compileComponents();
+      }).compileComponents();
    }));
 
    beforeEach(() => {

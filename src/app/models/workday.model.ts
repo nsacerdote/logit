@@ -4,11 +4,11 @@ import { TimeUtils } from '../shared/utils/time.utils';
 import { GenericDocEntity } from '../entity/generic-doc.entity';
 
 export class Workday implements GenericDocEntity {
-
-   constructor(public date: moment.Moment = moment(),
-               public worklogs: Worklog[] = [],
-               public reminders: string = '') {
-   }
+   constructor(
+      public date: moment.Moment = moment(),
+      public worklogs: Worklog[] = [],
+      public reminders: string = ''
+   ) {}
 
    static of(raw: any): Workday {
       const result = Object.assign(new Workday(), raw);

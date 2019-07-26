@@ -11,12 +11,8 @@ describe('HeaderComponent', () => {
    beforeEach(async(() => {
       TestBed.configureTestingModule({
          declarations: [HeaderComponent],
-         imports: [
-            RouterTestingModule,
-            AppMaterialModule
-         ],
-      })
-         .compileComponents();
+         imports: [RouterTestingModule, AppMaterialModule]
+      }).compileComponents();
    }));
 
    beforeEach(() => {
@@ -30,18 +26,21 @@ describe('HeaderComponent', () => {
    });
 
    it('should contain the app name', () => {
-      const appAnchor: HTMLAnchorElement = fixture.debugElement.nativeElement.querySelector('.brand');
+      const appAnchor: HTMLAnchorElement = fixture.debugElement.nativeElement.querySelector(
+         '.brand'
+      );
       expect(appAnchor.text).toContain('Logit');
    });
 
    describe('Navigation', () => {
-
       let anchors: HTMLAnchorElement[];
       let hrefs: string[];
 
       beforeEach(() => {
-         anchors = Array.from(fixture.debugElement.nativeElement.querySelectorAll('a'));
-         hrefs = anchors.map((anchor) => anchor.getAttribute('href'));
+         anchors = Array.from(
+            fixture.debugElement.nativeElement.querySelectorAll('a')
+         );
+         hrefs = anchors.map(anchor => anchor.getAttribute('href'));
       });
 
       it('should provide a way to access the workday', () => {
@@ -51,6 +50,5 @@ describe('HeaderComponent', () => {
       it('should provide a way to access the settings', () => {
          expect(hrefs).toEqual(jasmine.arrayContaining(['/settings']));
       });
-
    });
 });

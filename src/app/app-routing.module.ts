@@ -5,14 +5,13 @@ import { WorkdayComponent } from './components/workday/workday.component';
 import { SettingsComponent } from './components/settings/settings.component';
 
 const routes: Routes = [
-   {path: '', redirectTo: 'workday', pathMatch: 'full'},
-   {path: 'workday', component: WorkdayComponent},
-   {path: 'settings', component: SettingsComponent}
+   { path: '', redirectTo: 'workday', pathMatch: 'full' },
+   { path: 'workday', component: WorkdayComponent },
+   { path: 'settings', component: SettingsComponent }
 ];
 
 @NgModule({
-   imports: [RouterModule.forRoot(routes, {useHash: true})],
+   imports: [RouterModule.forRoot(routes, { useHash: true })],
    exports: [RouterModule]
 })
-export class AppRoutingModule {
-}
+export class AppRoutingModule {}

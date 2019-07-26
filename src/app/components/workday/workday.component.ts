@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import {
+   ChangeDetectionStrategy,
+   ChangeDetectorRef,
+   Component,
+   OnInit
+} from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { BehaviorSubject, concat } from 'rxjs';
 import { skip, switchMap, tap } from 'rxjs/operators';
@@ -15,16 +20,17 @@ import { JiraApiService } from '../../services/jira-api.service';
    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class WorkdayComponent implements OnInit {
-
    loadedDate: moment.Moment;
    workdayForm: FormGroup;
    selectedDate$: BehaviorSubject<moment.Moment>;
    sendingWorklogs = false;
 
-   constructor(private fb: FormBuilder,
-               private cdRef: ChangeDetectorRef,
-               private workdayService: WorkdayService,
-               private jiraApiService: JiraApiService) { }
+   constructor(
+      private fb: FormBuilder,
+      private cdRef: ChangeDetectorRef,
+      private workdayService: WorkdayService,
+      private jiraApiService: JiraApiService
+   ) {}
 
    ngOnInit() {
       const initialDate = moment();
@@ -34,16 +40,18 @@ export class WorkdayComponent implements OnInit {
    }
 
    private loadDate(date: moment.Moment) {
-      return this.workdayService.getOrCreate(date).pipe(
-         tap(workday => this.setLoadedWorkday(workday))
-      );
+      return this.workdayService
+         .getOrCreate(date)
+         .pipe(tap(workday => this.setLoadedWorkday(workday)));
    }
 
    private subscribeToSelectedDate() {
-      this.selectedDate$.pipe(
-         skip(1),
-         switchMap(date => this.saveAndLoad(date))
-      ).subscribe();
+      this.selectedDate$
+         .pipe(
+            skip(1),
+            switchMap(date => this.saveAndLoad(date))
+         )
+         .subscribe();
    }
 
    private setLoadedWorkday(workday: Workday) {
@@ -53,10 +61,7 @@ export class WorkdayComponent implements OnInit {
    }
 
    private saveAndLoad(date: moment.Moment) {
-      return concat(
-         this.save(),
-         this.loadDate(date)
-      );
+      return concat(this.save(), this.loadDate(date));
    }
 
    private setWorkdayForm(workday: Workday) {
@@ -84,11 +89,10 @@ export class WorkdayComponent implements OnInit {
 
    sendWorklogs() {
       this.sendingWorklogs = true;
-      this.sendWorklogsToJira()
-         .subscribe(() => {
-            this.sendingWorklogs = false;
-            this.cdRef.detectChanges();
-         });
+      this.sendWorklogsToJira().subscribe(() => {
+         this.sendingWorklogs = false;
+         this.cdRef.detectChanges();
+      });
    }
 
    sendWorklogsToJira() {
@@ -96,5 +100,4 @@ export class WorkdayComponent implements OnInit {
          this.getFormValueAsWorkday().worklogs
       );
    }
-
 }

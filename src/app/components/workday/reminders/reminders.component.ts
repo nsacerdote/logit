@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import {
+   ChangeDetectionStrategy,
+   Component,
+   Input,
+   OnInit
+} from '@angular/core';
 import { FormControl } from '@angular/forms';
 
 @Component({
@@ -8,13 +13,9 @@ import { FormControl } from '@angular/forms';
    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RemindersComponent implements OnInit {
-
    @Input() remindersFormControl: FormControl;
 
-   constructor() {
-   }
+   constructor() {}
 
-   ngOnInit() {
-   }
-
+   ngOnInit() {}
 }

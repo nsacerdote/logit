@@ -28,5 +28,4 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
       MatProgressBarModule
    ]
 })
-export class AppMaterialModule {
-}
+export class AppMaterialModule {}

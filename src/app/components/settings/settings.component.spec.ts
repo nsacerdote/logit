@@ -11,12 +11,8 @@ describe('SettingsComponent', () => {
    beforeEach(async(() => {
       TestBed.configureTestingModule({
          declarations: [SettingsComponent],
-         imports: [
-            NoopAnimationsModule,
-            AppMaterialModule
-         ]
-      })
-         .compileComponents();
+         imports: [NoopAnimationsModule, AppMaterialModule]
+      }).compileComponents();
    }));
 
    beforeEach(() => {

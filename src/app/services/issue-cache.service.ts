@@ -6,10 +6,8 @@ import { Database } from '../entity/database';
 import { Issue } from '../models/issue.model';
 import * as _ from 'lodash';
 
-
 @Injectable()
 export class IssueCacheService {
-
    private issueCacheDb: Database<Issue>;
 
    constructor() {
@@ -17,10 +15,7 @@ export class IssueCacheService {
    }
 
    save(issue: Issue): Observable<Issue> {
-      return this.upsert(issue)
-         .pipe(
-            map(issueDoc => Issue.of(issueDoc))
-         );
+      return this.upsert(issue).pipe(map(issueDoc => Issue.of(issueDoc)));
    }
 
    private upsert(issue: Issue): Observable<Issue> {
@@ -28,13 +23,13 @@ export class IssueCacheService {
    }
 
    search(text: string): Observable<Issue[]> {
-      return this.issueCacheDb.find({
-         $or : [
-            { description : { $regex : new RegExp(text, 'i') }},
-            { key : { $regex : new RegExp(text, 'i') }}
-         ]
-      }).pipe(
-         map(issues => _.take(issues, 50))
-      );
+      return this.issueCacheDb
+         .find({
+            $or: [
+               { description: { $regex: new RegExp(text, 'i') } },
+               { key: { $regex: new RegExp(text, 'i') } }
+            ]
+         })
+         .pipe(map(issues => _.take(issues, 50)));
    }
 }

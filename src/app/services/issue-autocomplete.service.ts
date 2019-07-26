@@ -6,30 +6,24 @@ import { IssueCacheService } from './issue-cache.service';
 import { scan, tap } from 'rxjs/operators';
 import * as _ from 'lodash';
 
-
 /**
  * This service is responsible for providing autocomplete/search issues capabilities
  */
 @Injectable()
 export class IssueAutocompleteService {
-
-   constructor(private jiraApiService: JiraApiService,
-               private issueCacheService: IssueCacheService) {}
-
+   constructor(
+      private jiraApiService: JiraApiService,
+      private issueCacheService: IssueCacheService
+   ) {}
 
    search(searchText: string): Observable<Issue[]> {
       return concat(
          this.searchIssuesFromCache(searchText),
          this.searchIssues(searchText)
-      ).pipe(
-         scan((acc, issues) => mergeIssues(issues, acc), [])
-      );
+      ).pipe(scan((acc, issues) => mergeIssues(issues, acc), []));
 
       function mergeIssues(issues: Issue[], acc: Issue[]) {
-         return _.sortBy(
-            _.unionBy(issues, acc, 'key'),
-            'key'
-         );
+         return _.sortBy(_.unionBy(issues, acc, 'key'), 'key');
       }
    }
 
@@ -38,14 +32,12 @@ export class IssueAutocompleteService {
    }
 
    private searchIssues(searchText: string): Observable<Issue[]> {
-      return this.jiraApiService.searchIssues(searchText)
+      return this.jiraApiService
+         .searchIssues(searchText)
          .pipe(
-            tap(
-               issues => issues.forEach(
-                  i => this.issueCacheService.save(i).subscribe()
-               )
+            tap(issues =>
+               issues.forEach(i => this.issueCacheService.save(i).subscribe())
             )
          );
    }
-
 }

@@ -13,10 +13,12 @@ import { Issue } from '../models/issue.model';
  */
 @Injectable()
 export class JiraApiService {
-
    private axios: typeof axios;
 
-   constructor(electronService: ElectronService, private settingsService: SettingsService) {
+   constructor(
+      electronService: ElectronService,
+      private settingsService: SettingsService
+   ) {
       this.axios = electronService.remote.require('axios');
    }
 
@@ -27,10 +29,15 @@ export class JiraApiService {
    searchIssues(text: string): Observable<Issue[]> {
       const jql = this.getJql(text);
       return this.settingsService.getJiraUrl().pipe(
-         switchMap(jiraUrl => from(this.axios.get(`${jiraUrl}/rest/api/latest/search${jql}`))),
-         map(response => response.data.issues.map(
-            (jiraIssue: any) => new Issue(jiraIssue.key, jiraIssue.fields.summary)
-         ))
+         switchMap(jiraUrl =>
+            from(this.axios.get(`${jiraUrl}/rest/api/latest/search${jql}`))
+         ),
+         map(response =>
+            response.data.issues.map(
+               (jiraIssue: any) =>
+                  new Issue(jiraIssue.key, jiraIssue.fields.summary)
+            )
+         )
       );
    }
 

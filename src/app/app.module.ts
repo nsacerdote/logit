@@ -6,7 +6,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 
-
 import { AppRoutingModule } from './app-routing.module';
 // NG Translate
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
@@ -64,7 +63,7 @@ export function HttpLoaderFactory(http: HttpClient) {
       TranslateModule.forRoot({
          loader: {
             provide: TranslateLoader,
-            useFactory: (HttpLoaderFactory),
+            useFactory: HttpLoaderFactory,
             deps: [HttpClient]
          }
       })
@@ -80,5 +79,4 @@ export function HttpLoaderFactory(http: HttpClient) {
    ],
    bootstrap: [AppComponent]
 })
-export class AppModule {
-}
+export class AppModule {}

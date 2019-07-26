@@ -1,5 +1,16 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
+import {
+   ChangeDetectionStrategy,
+   ChangeDetectorRef,
+   Component,
+   Input,
+   OnInit
+} from '@angular/core';
+import {
+   FormArray,
+   FormBuilder,
+   FormControl,
+   NG_VALUE_ACCESSOR
+} from '@angular/forms';
 import { Worklog, WorklogStatus } from '../../../models/worklog.model';
 import { BaseControlValueAccessorComponent } from '../../../shared/base-control-value-accessor.component';
 import { Observable } from 'rxjs';
@@ -20,15 +31,14 @@ import * as moment from 'moment';
    ],
    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class WorklogListComponent extends BaseControlValueAccessorComponent implements OnInit {
-
+export class WorklogListComponent extends BaseControlValueAccessorComponent
+   implements OnInit {
    @Input() worklogsDate: moment.Moment;
 
    worklogsFormArray: FormArray;
    focusIndex = -1;
 
-   constructor(private fb: FormBuilder,
-               private cdRef: ChangeDetectorRef) {
+   constructor(private fb: FormBuilder, private cdRef: ChangeDetectorRef) {
       super();
    }
 
@@ -37,7 +47,13 @@ export class WorklogListComponent extends BaseControlValueAccessorComponent impl
    }
 
    addNewWorklog() {
-      const worklogToAdd = new Worklog('', '', '', new Issue('', ''), WorklogStatus.NOT_SENT);
+      const worklogToAdd = new Worklog(
+         '',
+         '',
+         '',
+         new Issue('', ''),
+         WorklogStatus.NOT_SENT
+      );
       const lastFormControl = this.getLastFormControl();
       if (lastFormControl) {
          worklogToAdd.startTime = lastFormControl.value.endTime;
@@ -60,7 +76,9 @@ export class WorklogListComponent extends BaseControlValueAccessorComponent impl
       while (this.worklogsFormArray.length !== 0) {
          this.worklogsFormArray.removeAt(0);
       }
-      worklogs.forEach((worklog) => this.worklogsFormArray.push(new FormControl(worklog)));
+      worklogs.forEach(worklog =>
+         this.worklogsFormArray.push(new FormControl(worklog))
+      );
       this.cdRef.detectChanges();
    }
 

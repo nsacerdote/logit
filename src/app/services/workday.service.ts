@@ -9,13 +9,11 @@ import { Database } from '../entity/database';
 import { Issue } from '../models/issue.model';
 import { TimeUtils } from '../shared/utils/time.utils';
 
-
 /**
  * This service is responsible for providing a way to access the workdays
  */
 @Injectable()
 export class WorkdayService {
-
    private workdayDb: Database<Workday>;
 
    constructor() {
@@ -23,10 +21,9 @@ export class WorkdayService {
    }
 
    save(workday: Workday): Observable<Workday> {
-      return this.upsert(workday)
-         .pipe(
-            map(workdayDoc => Workday.of(workdayDoc))
-         );
+      return this.upsert(workday).pipe(
+         map(workdayDoc => Workday.of(workdayDoc))
+      );
    }
 
    private upsert(workday: Workday): Observable<Workday> {
@@ -34,12 +31,11 @@ export class WorkdayService {
    }
 
    getOrCreate(date: moment.Moment): Observable<Workday> {
-      return this.get(date)
-         .pipe(
-            map(workdayDoc =>
-               workdayDoc ? Workday.of(workdayDoc) : this.create(date)
-            )
-         );
+      return this.get(date).pipe(
+         map(workdayDoc =>
+            workdayDoc ? Workday.of(workdayDoc) : this.create(date)
+         )
+      );
    }
 
    private get(date: moment.Moment): Observable<Workday> {
@@ -49,7 +45,7 @@ export class WorkdayService {
    private create(date: moment.Moment) {
       return new Workday(
          date,
-         [ new Worklog('08:00', '', '', new Issue(), WorklogStatus.NOT_SENT) ],
+         [new Worklog('08:00', '', '', new Issue(), WorklogStatus.NOT_SENT)],
          ''
       );
    }

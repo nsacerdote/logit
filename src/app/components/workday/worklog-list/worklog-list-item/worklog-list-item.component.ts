@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, } from '@angular/core';
+import {
+   ChangeDetectionStrategy,
+   ChangeDetectorRef,
+   Component,
+   EventEmitter,
+   Input,
+   OnInit,
+   Output
+} from '@angular/core';
 import { FormBuilder, FormGroup, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { BaseControlValueAccessorComponent } from '../../../../shared/base-control-value-accessor.component';
 import { Observable } from 'rxjs';
@@ -18,8 +26,8 @@ import { Worklog } from '../../../../models/worklog.model';
    ],
    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class WorklogListItemComponent extends BaseControlValueAccessorComponent implements OnInit {
-
+export class WorklogListItemComponent extends BaseControlValueAccessorComponent
+   implements OnInit {
    @Input() last = false;
    @Input() disabled = false;
    @Input() shouldFocus = false;
@@ -29,21 +37,20 @@ export class WorklogListItemComponent extends BaseControlValueAccessorComponent 
 
    worklogFormGroup: FormGroup;
 
-   constructor(private fb: FormBuilder,
-               private cdRef: ChangeDetectorRef) {
+   constructor(private fb: FormBuilder, private cdRef: ChangeDetectorRef) {
       super();
    }
 
    ngOnInit() {
       this.worklogFormGroup = this.fb.group({
-         'startTime': '',
-         'endTime': '',
-         'description': '',
-         'issue': {
-            'key': '',
-            'description': '',
+         startTime: '',
+         endTime: '',
+         description: '',
+         issue: {
+            key: '',
+            description: ''
          },
-         'status': ''
+         status: ''
       });
       if (this.disabled) {
          this.worklogFormGroup.disable();

@@ -9,8 +9,7 @@ describe('WorklogListItemComponent', () => {
    beforeEach(async(() => {
       TestBed.configureTestingModule({
          declarations: [WorklogListItemComponent]
-      })
-         .compileComponents();
+      }).compileComponents();
    }));
 
    beforeEach(() => {
