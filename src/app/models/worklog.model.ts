@@ -4,17 +4,26 @@ import { TimeUtils } from '../shared/utils/time.utils';
 
 export enum WorklogStatus {
    NOT_SENT = 'NOT_SENT',
-   SENT = 'SENT'
+   SENDING = 'SENDING',
+   SENT = 'SENT',
+   ERROR = 'ERROR'
 }
 
 export class Worklog {
+
+   public statusMessage = '';
+
    constructor(
       public startTime: string = null,
       public endTime: string = null,
       public description: string = null,
       public issue: Issue = null,
       public status: WorklogStatus = null
-   ) {}
+   ) {
+      if (this.isNotSent()) {
+         this.statusMessage = 'Waiting to be sent to Jira';
+      }
+   }
 
    static of(raw: any): Worklog {
       const worklog = Object.assign(new Worklog(), raw);
@@ -44,5 +53,36 @@ export class Worklog {
       const raw: any = Object.assign({}, this);
       raw.issue = raw.issue.getRaw();
       return raw;
+   }
+
+   isSent(): boolean {
+      return this.status === WorklogStatus.SENT;
+   }
+
+   isSending(): boolean {
+      return this.status === WorklogStatus.SENDING;
+   }
+
+   hasError(): boolean {
+      return this.status === WorklogStatus.ERROR;
+   }
+
+   isNotSent(): boolean {
+      return this.status === WorklogStatus.NOT_SENT;
+   }
+
+   setAsSent() {
+      this.status = WorklogStatus.SENT;
+      this.statusMessage = 'Worklog has been sent to Jira';
+   }
+
+   setAsSending() {
+      this.status = WorklogStatus.SENDING;
+      this.statusMessage = 'Sending worklog to Jira';
+   }
+
+   setAsError(details: string) {
+      this.status = WorklogStatus.ERROR;
+      this.statusMessage = details;
    }
 }

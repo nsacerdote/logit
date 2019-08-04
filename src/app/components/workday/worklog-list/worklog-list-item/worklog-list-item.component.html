@@ -21,7 +21,9 @@
    <app-issue-autocomplete [disabled]="disabled" [formControl]="worklogFormGroup.get('issue')"></app-issue-autocomplete>
 </td>
 <td class="mat-cell status">
-   {{ worklogFormGroup.get('status').value }}
+   <app-worklog-status [status]="worklogFormGroup.get('status').value"
+                       [message]="worklogFormGroup.get('statusMessage').value">
+   </app-worklog-status>
 </td>
 <td class="mat-cell actions">
    <button mat-icon-button *ngIf="!disabled" type="button"

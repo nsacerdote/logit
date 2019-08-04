@@ -1,0 +1,6 @@
+<span [matTooltip]="message">
+   <mat-icon class="md-dark" aria-label="Not Sent" *ngIf="status === 'NOT_SENT'">cloud_queue</mat-icon>
+   <mat-spinner diameter="24" *ngIf="status === 'SENDING'"></mat-spinner>
+   <mat-icon class="md-dark" aria-label="Error sending" *ngIf="status === 'ERROR'">error</mat-icon>
+   <mat-icon class="md-dark" aria-label="Sent" *ngIf="status === 'SENT'">cloud_done</mat-icon>
+</span>

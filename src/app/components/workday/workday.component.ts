@@ -89,10 +89,18 @@ export class WorkdayComponent implements OnInit {
 
    sendWorklogs() {
       this.sendingWorklogs = true;
-      this.sendWorklogsToJira().subscribe(() => {
-         this.sendingWorklogs = false;
-         this.cdRef.detectChanges();
-      });
+      this.sendWorklogsToJira().subscribe(
+         worklogs => {
+            this.workdayForm.patchValue({
+               worklogs: worklogs
+            });
+         },
+         () => {},
+         () => {
+            this.sendingWorklogs = false;
+            this.cdRef.detectChanges();
+         }
+      );
    }
 
    sendWorklogsToJira() {

@@ -50,7 +50,8 @@ export class WorklogListItemComponent extends BaseControlValueAccessorComponent
             key: '',
             description: ''
          },
-         status: ''
+         status: '',
+         statusMessage: ''
       });
       if (this.disabled) {
          this.worklogFormGroup.disable();

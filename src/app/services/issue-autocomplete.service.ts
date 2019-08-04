@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { concat, Observable } from 'rxjs';
+import { concat, Observable, of } from 'rxjs';
 import { Issue } from '../models/issue.model';
 import { JiraApiService } from './jira-api.service';
 import { IssueCacheService } from './issue-cache.service';
@@ -17,6 +17,10 @@ export class IssueAutocompleteService {
    ) {}
 
    search(searchText: string): Observable<Issue[]> {
+      if (!searchText || searchText.length < 3) {
+         return of([]);
+      }
+
       return concat(
          this.searchIssuesFromCache(searchText),
          this.searchIssues(searchText)

@@ -11,6 +11,8 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
    exports: [
@@ -25,7 +27,9 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
       DragDropModule,
       MatDatepickerModule,
       MatMomentDateModule,
-      MatProgressBarModule
+      MatProgressBarModule,
+      MatProgressSpinnerModule,
+      MatTooltipModule
    ]
 })
 export class AppMaterialModule {}

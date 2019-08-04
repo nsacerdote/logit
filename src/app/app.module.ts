@@ -16,6 +16,7 @@ import { ElectronService } from './services/electron.service';
 import { AppMaterialModule } from './shared/app-material.module';
 
 import { AppComponent } from './app.component';
+
 import { HeaderComponent } from './components/header/header.component';
 import { SettingsComponent } from './components/settings/settings.component';
 import { WorkdayComponent } from './components/workday/workday.component';
@@ -24,6 +25,8 @@ import { WorklogListComponent } from './components/workday/worklog-list/worklog-
 import { WorklogListItemComponent } from './components/workday/worklog-list/worklog-list-item/worklog-list-item.component';
 import { RemindersComponent } from './components/workday/reminders/reminders.component';
 import { WorkdaySummaryComponent } from './components/workday/workday-summary/workday-summary.component';
+import { WorklogStatusComponent } from './components/workday/worklog-list/worklog-status/worklog-status.component';
+
 import { TimepickerComponent } from './shared/timepicker/timepicker.component';
 import { IssueAutocompleteComponent } from './shared/issue-autocomplete/issue-autocomplete.component';
 
@@ -50,7 +53,8 @@ export function HttpLoaderFactory(http: HttpClient) {
       RemindersComponent,
       WorkdaySummaryComponent,
       TimepickerComponent,
-      IssueAutocompleteComponent
+      IssueAutocompleteComponent,
+      WorklogStatusComponent
    ],
    imports: [
       BrowserModule,
