@@ -30,6 +30,9 @@ export class IssueCacheService {
                { key: { $regex: new RegExp(text, 'i') } }
             ]
          })
-         .pipe(map(issues => _.take(issues, 50)));
+         .pipe(
+            map(issues => _.take(issues, 50)),
+            map(issues => issues.map(i => Issue.of(i)))
+         );
    }
 }

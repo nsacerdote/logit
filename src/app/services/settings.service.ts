@@ -8,7 +8,12 @@ import { Observable, of } from 'rxjs';
 export class SettingsService {
    constructor() {}
 
-   getJiraUrl(): Observable<string> {
-      return of('http://admin:admin@localhost:2990/jira');
+   getJiraSettings(): Observable<{url: string, username: string, password: string}> {
+      return of({
+         url : 'https://jira.edataconsulting.es',
+         username : 'username_goes_here',
+         password : 'password_goes_here'
+      });
    }
+
 }

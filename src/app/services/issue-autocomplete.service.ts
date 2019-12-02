@@ -3,7 +3,7 @@ import { concat, Observable, of } from 'rxjs';
 import { Issue } from '../models/issue.model';
 import { JiraApiService } from './jira-api.service';
 import { IssueCacheService } from './issue-cache.service';
-import { scan, tap } from 'rxjs/operators';
+import { scan } from 'rxjs/operators';
 import * as _ from 'lodash';
 
 /**
@@ -17,17 +17,13 @@ export class IssueAutocompleteService {
    ) {}
 
    search(searchText: string): Observable<Issue[]> {
-      if (!searchText || searchText.length < 3) {
-         return of([]);
-      }
-
       return concat(
          this.searchIssuesFromCache(searchText),
          this.searchIssues(searchText)
-      ).pipe(scan((acc, issues) => mergeIssues(issues, acc), []));
+      ).pipe(scan((acc, issues) => mergeIssues(acc, issues), []));
 
-      function mergeIssues(issues: Issue[], acc: Issue[]) {
-         return _.sortBy(_.unionBy(issues, acc, 'key'), 'key');
+      function mergeIssues(acc: Issue[], issues: Issue[]) {
+         return _.unionBy(acc, _.sortBy(issues, 'key'), 'key');
       }
    }
 
@@ -36,12 +32,13 @@ export class IssueAutocompleteService {
    }
 
    private searchIssues(searchText: string): Observable<Issue[]> {
-      return this.jiraApiService
-         .searchIssues(searchText)
-         .pipe(
-            tap(issues =>
-               issues.forEach(i => this.issueCacheService.save(i).subscribe())
-            )
-         );
+      if (!searchText || searchText.length < 3) {
+         return of([]);
+      }
+      return this.jiraApiService.searchIssues(searchText);
+   }
+
+   issueSelected(issue: Issue) {
+      this.issueCacheService.save(issue).subscribe();
    }
 }

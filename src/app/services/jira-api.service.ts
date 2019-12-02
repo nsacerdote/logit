@@ -1,7 +1,8 @@
+import * as _ from 'lodash';
 import axios from 'axios';
 import { Injectable } from '@angular/core';
 import { combineLatest, concat, from, Observable, of } from 'rxjs';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { catchError, concatMap, map, switchMap } from 'rxjs/operators';
 
 import { Worklog } from '../models/worklog.model';
 import { ElectronService } from './electron.service';
@@ -31,39 +32,52 @@ export class JiraApiService {
       };
    }
 
+   private static authHeaders(jiraSettings) {
+      return {
+         auth: {
+            username: jiraSettings.username,
+            password: jiraSettings.password
+         }
+      };
+   }
+
    private static getJql(text: string): string {
       if (text) {
-         return `?jql=text~"${text}"`;
+         return `(status != "Closed" AND status != "Resolved" AND text~"${text}") OR key=${text}`;
       } else {
          return '';
       }
    }
 
    sendWorklogs(worklogs: Worklog[]): Observable<Worklog[]> {
-      return this.settingsService
-         .getJiraUrl()
-         .pipe(
-            switchMap(jiraUrl =>
-               combineLatest(worklogs.map(w => this.sendWorklog(jiraUrl, w)))
-            )
-         );
+      const groupedWorklogs = _.groupBy(worklogs, 'issue.key');
+      return combineLatest(
+         _.map(groupedWorklogs, gW => this.sendWorklogsSequentially(gW))
+      ).pipe(map(groupedResults => _.flatten(groupedResults)));
    }
 
-   private sendWorklog(jiraUrl: string, worklog: Worklog) {
+   private sendWorklogsSequentially(worklogs: Worklog[]) {
+      return from(worklogs).pipe(
+         concatMap(w => this.sendWorklog(w)),
+         map(() => worklogs)
+      );
+   }
+
+   private sendWorklog(worklog: Worklog) {
       if (worklog.isSent()) {
          return of(worklog);
       }
 
       return concat(
          setAsSending(),
-         this.sendToJira(jiraUrl, worklog).pipe(
+         this.sendToJira(worklog).pipe(
             map(() => setAsSent()),
             catchError(err => setAsError(err))
          )
       );
 
       function setAsSending() {
-         worklog.setAsSending();;
+         worklog.setAsSending();
          return of(worklog);
       }
 
@@ -79,20 +93,34 @@ export class JiraApiService {
       }
    }
 
-   private sendToJira(jiraUrl: string, worklog: Worklog) {
-      return from(
-         this.axios.post(
-            `${jiraUrl}/rest/api/latest/issue/${worklog.issue.key}/worklog`,
-            JiraApiService.buildWorklogBody(worklog)
-         )
-      );
+   private sendToJira(worklog: Worklog) {
+      return this.settingsService
+         .getJiraSettings()
+         .pipe(
+            switchMap(jiraSettings =>
+               from(
+                  this.axios.post(
+                     `${jiraSettings.url}/rest/api/latest/issue/${worklog.issue.key}/worklog`,
+                     JiraApiService.buildWorklogBody(worklog),
+                     JiraApiService.authHeaders(jiraSettings)
+                  )
+               )
+            )
+         );
    }
 
    searchIssues(text: string): Observable<Issue[]> {
-      const jql = JiraApiService.getJql(text);
-      return this.settingsService.getJiraUrl().pipe(
-         switchMap(jiraUrl =>
-            from(this.axios.get(`${jiraUrl}/rest/api/latest/search${jql}`))
+      return this.settingsService.getJiraSettings().pipe(
+         switchMap(jiraSettings =>
+            from(
+               this.axios.get(`${jiraSettings.url}/rest/api/latest/search`, {
+                  ...JiraApiService.authHeaders(jiraSettings),
+                  params: {
+                     jql: JiraApiService.getJql(text),
+                     validateQuery: false
+                  }
+               })
+            )
          ),
          map(response =>
             response.data.issues.map(

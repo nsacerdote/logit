@@ -1,7 +1,7 @@
 import {
    ChangeDetectionStrategy,
    ChangeDetectorRef,
-   Component,
+   Component, OnDestroy,
    OnInit
 } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
@@ -19,7 +19,7 @@ import { JiraApiService } from '../../services/jira-api.service';
    styleUrls: ['./workday.component.scss'],
    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class WorkdayComponent implements OnInit {
+export class WorkdayComponent implements OnInit, OnDestroy {
    loadedDate: moment.Moment;
    workdayForm: FormGroup;
    selectedDate$: BehaviorSubject<moment.Moment>;
@@ -107,5 +107,9 @@ export class WorkdayComponent implements OnInit {
       return this.jiraApiService.sendWorklogs(
          this.getFormValueAsWorkday().worklogs
       );
+   }
+
+   ngOnDestroy(): void {
+      this.save().subscribe();
    }
 }

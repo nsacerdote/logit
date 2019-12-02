@@ -109,12 +109,16 @@ export class IssueAutocompleteComponent
 
    selectOption(issue: Issue) {
       this.optionSelected = true;
+      this.issueAutocompleteService.issueSelected(issue);
       this.writeValue(issue);
       this.closeOptions();
    }
 
    inputEventHandler(value: string) {
       this.optionSelected = false;
+      this.issueGroup.patchValue({
+         description : ''
+      });
       this.searchValue(value);
    }
 
@@ -152,7 +156,7 @@ export class IssueAutocompleteComponent
 
    private setOptionsObservable() {
       this.$options = this.$input.pipe(
-         debounceTime(100),
+         debounceTime(200),
          distinctUntilChanged(),
          switchMap(input => this.issueAutocompleteService.search(input)),
          share()

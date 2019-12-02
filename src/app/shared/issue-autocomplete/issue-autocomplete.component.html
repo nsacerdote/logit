@@ -6,7 +6,8 @@
        (focus)="focusEventHandler($event.target.value)"
        (keydown.escape)="closeOptions()"
        (blur)="closeOptions()"
-       (input)="inputEventHandler($event.target.value)">
+       (input)="inputEventHandler($event.target.value)"
+       [matTooltip]="issueGroup.get('description').value">
 <div class="issue-autocomplete__options mat-elevation-z3"
      [hidden]="!opened"
      (mousedown)="onMouseDownMenu($event)">
