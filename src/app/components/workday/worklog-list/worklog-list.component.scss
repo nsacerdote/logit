@@ -160,10 +160,7 @@ tr.new-row {
    cursor: pointer;
    background-color: $grey200;
 
-   ::ng-deep {
-      input,
-      textarea {
-         pointer-events: none;
-      }
+   >td>* {
+      vertical-align: middle;
    }
 }

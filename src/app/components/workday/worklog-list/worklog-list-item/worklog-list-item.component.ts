@@ -29,7 +29,6 @@ import { Worklog } from '../../../../models/worklog.model';
 export class WorklogListItemComponent extends BaseControlValueAccessorComponent
    implements OnInit {
    @Input() last = false;
-   @Input() disabled = false;
    @Input() shouldFocus = false;
 
    @Output() newRow = new EventEmitter<void>();
@@ -53,9 +52,6 @@ export class WorklogListItemComponent extends BaseControlValueAccessorComponent
          status: '',
          statusMessage: ''
       });
-      if (this.disabled) {
-         this.worklogFormGroup.disable();
-      }
    }
 
    writeValue(worklog: any): void {

@@ -32,11 +32,11 @@ export class JiraApiService {
       };
    }
 
-   private static authHeaders(jiraSettings) {
+   private static authHeaders() {
       return {
          auth: {
-            username: jiraSettings.username,
-            password: jiraSettings.password
+            username : 'username',
+            password : 'pass'
          }
       };
    }
@@ -95,14 +95,14 @@ export class JiraApiService {
 
    private sendToJira(worklog: Worklog) {
       return this.settingsService
-         .getJiraSettings()
+         .getJiraUrl()
          .pipe(
-            switchMap(jiraSettings =>
+            switchMap(jiraUrl =>
                from(
                   this.axios.post(
-                     `${jiraSettings.url}/rest/api/latest/issue/${worklog.issue.key}/worklog`,
+                     `${jiraUrl}/rest/api/latest/issue/${worklog.issue.key}/worklog`,
                      JiraApiService.buildWorklogBody(worklog),
-                     JiraApiService.authHeaders(jiraSettings)
+                     JiraApiService.authHeaders()
                   )
                )
             )
@@ -110,11 +110,11 @@ export class JiraApiService {
    }
 
    searchIssues(text: string): Observable<Issue[]> {
-      return this.settingsService.getJiraSettings().pipe(
-         switchMap(jiraSettings =>
+      return this.settingsService.getJiraUrl().pipe(
+         switchMap(jiraUrl =>
             from(
-               this.axios.get(`${jiraSettings.url}/rest/api/latest/search`, {
-                  ...JiraApiService.authHeaders(jiraSettings),
+               this.axios.get(`${jiraUrl}/rest/api/latest/search`, {
+                  ...JiraApiService.authHeaders(),
                   params: {
                      jql: JiraApiService.getJql(text),
                      validateQuery: false

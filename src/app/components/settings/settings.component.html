@@ -5,7 +5,7 @@
    <mat-card-content>
       <mat-form-field appearance="standard">
          <mat-label>JIRA URL</mat-label>
-         <input matInput placeholder="https://jira.example.com">
+         <input [(ngModel)]="jiraUrl" (blur)="save()" matInput placeholder="https://jira.example.com">
          <mat-hint>URL of the JIRA server you want to send worklog to</mat-hint>
       </mat-form-field>
    </mat-card-content>

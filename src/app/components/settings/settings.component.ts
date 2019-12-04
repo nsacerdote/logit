@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import {
+   ChangeDetectionStrategy,
+   ChangeDetectorRef,
+   Component,
+   OnDestroy,
+   OnInit
+} from '@angular/core';
+import { SettingsService } from '../../services/settings.service';
 
 @Component({
    selector: 'app-settings',
@@ -6,8 +13,26 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
    styleUrls: ['./settings.component.scss'],
    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SettingsComponent implements OnInit {
-   constructor() {}
+export class SettingsComponent implements OnInit, OnDestroy {
+   jiraUrl: string;
 
-   ngOnInit() {}
+   constructor(
+      private settingsService: SettingsService,
+      private cdRef: ChangeDetectorRef
+   ) {}
+
+   ngOnInit() {
+      this.settingsService.getJiraUrl().subscribe(jiraUrl => {
+         this.jiraUrl = jiraUrl;
+         this.cdRef.detectChanges();
+      });
+   }
+
+   save() {
+      this.settingsService.saveJiraUrl(this.jiraUrl).subscribe();
+   }
+
+   ngOnDestroy(): void {
+      this.save();
+   }
 }
