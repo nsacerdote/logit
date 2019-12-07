@@ -1,7 +1,6 @@
-@import "theme";
+@import "_colors";
 
 input, textarea {
-   color: $primaryText;
    font-family: 'Open Sans', sans-serif;
 }
 
@@ -32,7 +31,8 @@ input, textarea {
 }
 
 .input[disabled] {
-  border-style: dashed;
+   border-style: dashed;
+   color: $disabledText;
 }
 
 textarea.textarea {
@@ -65,5 +65,5 @@ textarea.multiline_input {
 }
 
 ::-webkit-input-placeholder {
-  color: $disabledText;
+  color: $secondaryText;
 }

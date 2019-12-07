@@ -3,8 +3,10 @@ import {
    ChangeDetectorRef,
    Component,
    Input,
+   OnChanges,
    OnDestroy,
-   OnInit
+   OnInit,
+   SimpleChanges
 } from '@angular/core';
 import { FormBuilder, FormGroup, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { BaseControlValueAccessorComponent } from '../base-control-value-accessor.component';
@@ -39,7 +41,7 @@ import { TimeUtils } from '../utils/time.utils';
 })
 export class IssueAutocompleteComponent
    extends BaseControlValueAccessorComponent
-   implements OnInit, OnDestroy {
+   implements OnInit, OnDestroy, OnChanges {
    private readonly SELECTION_EVENTS = {
       NEXT: 'NEXT',
       PREVIOUS: 'PREVIOUS',
@@ -73,12 +75,17 @@ export class IssueAutocompleteComponent
          key: { value: '', disabled: this.disabled },
          description: { value: '', disabled: this.disabled }
       });
-
       this.$input = new Subject<string>();
       this.$selectedOptionEvents = new Subject<string>();
       this.setOptionsObservable();
       this.setSelectedOptionObservable();
       this.watchForOptionSelectedEvent();
+   }
+
+   ngOnChanges(changes: SimpleChanges): void {
+      if (!changes.disabled.isFirstChange()) {
+         this.updateDisabledStatus();
+      }
    }
 
    onMouseDownMenu(event: MouseEvent) {
@@ -117,7 +124,7 @@ export class IssueAutocompleteComponent
    inputEventHandler(value: string) {
       this.optionSelected = false;
       this.issueGroup.patchValue({
-         description : ''
+         description: ''
       });
       this.searchValue(value);
    }
@@ -201,5 +208,13 @@ export class IssueAutocompleteComponent
 
    ngOnDestroy(): void {
       this.selectedOptionEventSubscription.unsubscribe();
+   }
+
+   private updateDisabledStatus() {
+      if (this.disabled) {
+         this.issueGroup.disable();
+      } else {
+         this.issueGroup.enable();
+      }
    }
 }

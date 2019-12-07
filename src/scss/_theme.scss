@@ -1,35 +1,9 @@
-@import '~@angular/material/theming';
+@import "_colors";
 
 $custom-typography: mat-typography-config(
-  $font-family: 'Open Sans, sans-serif'
+   $font-family: 'Open Sans, sans-serif'
 );
 @include mat-core($custom-typography);
 
-$app-primary: mat-palette($mat-blue-grey, 700, 300, 900);
-$app-accent:  mat-palette($mat-orange, 700, 400, 900);
-$app-error: mat-palette($mat-red);
 $app-theme: mat-light-theme($app-primary, $app-accent, $app-error);
 @include angular-material-theme($app-theme);
-
-$white: mat-color($mat-gray, A100);
-$grey50:  mat-color($mat-gray, 50);
-$grey100: mat-color($mat-gray, 100);
-$grey200: mat-color($mat-gray, 200);
-$grey300: mat-color($mat-gray, 300);
-
-$colorPrimary: mat-color($app-primary);
-$colorPrimaryLight: mat-color($app-primary, 300);
-$colorPrimaryDark: mat-color($app-primary, 900);
-$colorSecondary: mat-color($app-accent);
-$colorSecondaryLight: mat-color($app-accent, 400);
-$colorSecondaryDark: mat-color($app-accent, 900);
-$textOnColor: #ffffff;
-
-$primaryText: rgba(0,0,0,.87);
-$secondaryText: rgba(0,0,0,.54);
-$disabledText: rgba(0,0,0,.38);
-
-$greyBorder: rgba(0,0,0,.14);
-$greyBorderLight: rgba(0,0,0,.07);
-
-$errorColor: mat-color($app-error, 700);

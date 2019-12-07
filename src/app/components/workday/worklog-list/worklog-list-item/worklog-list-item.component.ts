@@ -34,6 +34,8 @@ export class WorklogListItemComponent extends BaseControlValueAccessorComponent
    @Output() newRow = new EventEmitter<void>();
    @Output() rowDelete = new EventEmitter<void>();
 
+   disabled = false;
+
    worklogFormGroup: FormGroup;
 
    constructor(private fb: FormBuilder, private cdRef: ChangeDetectorRef) {
@@ -54,9 +56,10 @@ export class WorklogListItemComponent extends BaseControlValueAccessorComponent
       });
    }
 
-   writeValue(worklog: any): void {
+   writeValue(worklog: Worklog): void {
       if (worklog) {
          this.worklogFormGroup.patchValue(worklog);
+         this.updateDisbledStatus(worklog);
          this.cdRef.detectChanges();
       }
    }
@@ -66,7 +69,7 @@ export class WorklogListItemComponent extends BaseControlValueAccessorComponent
    }
 
    calcSpentTime(): string {
-      return Worklog.of(this.worklogFormGroup.value).getWorkedTime();
+      return this.getFormValueAsWorklog().getWorkedTime();
    }
 
    handleTabOnLastInput(event: Event) {
@@ -79,5 +82,19 @@ export class WorklogListItemComponent extends BaseControlValueAccessorComponent
 
    deleteRowClicked() {
       this.rowDelete.emit();
+   }
+
+   getFormValueAsWorklog(): Worklog {
+      return Worklog.of(this.worklogFormGroup.value);
+   }
+
+   private updateDisbledStatus(worklog: Worklog) {
+      if (worklog.isSent()) {
+         this.worklogFormGroup.disable();
+         this.disabled = true;
+      } else {
+         this.worklogFormGroup.enable();
+         this.disabled = false;
+      }
    }
 }

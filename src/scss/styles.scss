@@ -1,19 +1,28 @@
-@import 'fonts';
-@import 'theme';
-@import 'tables';
-@import 'inputs';
+@import '_fonts';
+@import '_theme';
+@import '_tables';
+@import '_inputs';
+@import '_colors';
 
-*:not(textarea), *:before, *:after {
-  box-sizing: border-box;
+*:not(textarea),
+*:before,
+*:after {
+   box-sizing: border-box;
 }
 
-html, body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  font-family: 'Open Sans', sans-serif;
+html,
+body {
+   margin: 0;
+   padding: 0;
+   height: 100%;
+   font-family: 'Open Sans', sans-serif;
+   color: $primaryText;
 }
 
 .mat-card {
-  user-select: none;
+   user-select: none;
+}
+
+.mat-card-title {
+   font-size: 16px;
 }

@@ -18,7 +18,8 @@
   </textarea>
 </td>
 <td class="mat-cell issue">
-   <app-issue-autocomplete [disabled]="disabled" [formControl]="worklogFormGroup.get('issue')"></app-issue-autocomplete>
+   <app-issue-autocomplete [disabled]="disabled"
+                           [formControl]="worklogFormGroup.get('issue')"></app-issue-autocomplete>
 </td>
 <td class="mat-cell status">
    <app-worklog-status [status]="worklogFormGroup.get('status').value"

@@ -1,20 +1,21 @@
-<input class="input" placeholder="ABC-100"
-       [formControl]="issueGroup.get('key')"
-       (keydown.arrowup)="arrowUpEventHandler($event)"
-       (keydown.arrowdown)="arrowDownEventHandler($event)"
-       (keydown.enter)="enterEventHandler($event)"
-       (focus)="focusEventHandler($event.target.value)"
-       (keydown.escape)="closeOptions()"
-       (blur)="closeOptions()"
-       (input)="inputEventHandler($event.target.value)"
-       [matTooltip]="issueGroup.get('description').value">
-<div class="issue-autocomplete__options mat-elevation-z3"
-     [hidden]="!opened"
-     (mousedown)="onMouseDownMenu($event)">
-   <div class="issue-autocomplete__option"
-        [ngClass]="{ 'issue-autocomplete__option--selected' : ($selectedOption | async)?.key === option.key }"
-        (click)="selectOption(option)"
-        *ngFor="let option of ($options | async)">
-      {{option.key}}&nbsp;&nbsp;{{option.description}}
+<span [matTooltip]="issueGroup.get('description').value">
+   <input class="input" placeholder="ABC-100"
+          [formControl]="issueGroup.get('key')"
+          (keydown.arrowup)="arrowUpEventHandler($event)"
+          (keydown.arrowdown)="arrowDownEventHandler($event)"
+          (keydown.enter)="enterEventHandler($event)"
+          (focus)="focusEventHandler($event.target.value)"
+          (keydown.escape)="closeOptions()"
+          (blur)="closeOptions()"
+          (input)="inputEventHandler($event.target.value)">
+   <div class="issue-autocomplete__options mat-elevation-z3"
+        [hidden]="!opened"
+        (mousedown)="onMouseDownMenu($event)">
+      <div class="issue-autocomplete__option"
+           [ngClass]="{ 'issue-autocomplete__option--selected' : ($selectedOption | async)?.key === option.key }"
+           (click)="selectOption(option)"
+           *ngFor="let option of ($options | async)">
+         {{option.key}}&nbsp;&nbsp;{{option.description}}
+      </div>
    </div>
-</div>
+</span>
