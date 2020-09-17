@@ -14,11 +14,12 @@ export class Worklog {
    public statusMessage = '';
 
    constructor(
-      public startTime: string = null,
-      public endTime: string = null,
-      public description: string = null,
-      public issue: Issue = null,
-      public status: WorklogStatus = null
+      public id: string = null,
+      public startTime: string = '08:00',
+      public endTime: string = '',
+      public description: string = '',
+      public issue: Issue = new Issue(),
+      public status: WorklogStatus = WorklogStatus.NOT_SENT
    ) {
       if (this.isNotSent()) {
          this.statusMessage = 'Waiting to be sent to Jira';
@@ -71,7 +72,8 @@ export class Worklog {
       return this.status === WorklogStatus.NOT_SENT;
    }
 
-   setAsSent() {
+   setAsSent(id: string) {
+      this.id = id;
       this.status = WorklogStatus.SENT;
       this.statusMessage = 'Worklog has been sent to Jira';
    }

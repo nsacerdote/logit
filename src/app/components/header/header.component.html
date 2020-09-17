@@ -3,7 +3,7 @@
       routerLink="/workday"
       routerLinkActive="active"
       mat-button>
-      Logit
+      Worklog
    </a>
 
    <span class="fill-remaining-space"></span>
@@ -13,7 +13,8 @@
       mat-icon-button>
       <mat-icon>settings</mat-icon>
    </a>
-   <a mat-icon-button>
-      <mat-icon>face</mat-icon>
+   <a mat-button
+      (click)="openLogin()">
+      Log In
    </a>
 </mat-toolbar>

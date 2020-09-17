@@ -1,0 +1,49 @@
+<h4>Log In</h4>
+<form class="example-form">
+   <table class="example-full-width" cellspacing="0">
+      <tr>
+         <td>
+            <mat-form-field class="example-full-width">
+               <input
+                  matInput
+                  placeholder="Username"
+                  [(ngModel)]="username"
+                  name="username"
+                  required
+               />
+            </mat-form-field>
+         </td>
+      </tr>
+      <tr>
+         <td>
+            <mat-form-field class="example-full-width">
+               <input
+                  matInput
+                  placeholder="Password"
+                  [(ngModel)]="password"
+                  type="password"
+                  name="password"
+                  required
+                  cdkFocusInitial
+               />
+            </mat-form-field>
+         </td>
+      </tr>
+   </table>
+</form>
+<p class="error" *ngIf="status === 'ERROR_401'">
+   Wrong user or password
+</p>
+<p class="error" *ngIf="status === 'ERROR'">
+   There was an error on login check jira URL and internet connection
+</p>
+<mat-spinner *ngIf="status === 'LOADING'" diameter="40"></mat-spinner>
+<button
+   *ngIf="status !== 'LOADING'"
+   mat-raised-button
+   [disabled]="!username || !password"
+   (click)="login()"
+   color="primary"
+>
+   Log In
+</button>

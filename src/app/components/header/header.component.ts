@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { DialogService } from '../../services/dialog.service';
 
 @Component({
    selector: 'app-header',
@@ -7,7 +8,11 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HeaderComponent implements OnInit {
-   constructor() {}
+   constructor(private dialogService: DialogService) {}
 
    ngOnInit() {}
+
+   openLogin() {
+      this.dialogService.showLogin().subscribe();
+   }
 }

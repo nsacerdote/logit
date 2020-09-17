@@ -2,25 +2,34 @@ import * as _ from 'lodash';
 import axios from 'axios';
 import { Injectable } from '@angular/core';
 import { combineLatest, concat, from, Observable, of } from 'rxjs';
-import { catchError, concatMap, map, switchMap } from 'rxjs/operators';
+import { catchError, concatMap, map, tap } from 'rxjs/operators';
 
 import { Worklog } from '../models/worklog.model';
 import { ElectronService } from './electron.service';
 import { SettingsService } from './settings.service';
 import { Issue } from '../models/issue.model';
+import { UserInfo } from '../models/user-info.model';
+import { JiraCredentialsService } from './jira-credentials.service';
 
 /**
  * This service is responsible for contacting jira rest api (login, get autocomplete list, send worklogs, ...)
  */
 @Injectable()
 export class JiraApiService {
+   private axios: typeof axios;
+   private apiUrl: string;
+
    constructor(
       electronService: ElectronService,
-      private settingsService: SettingsService
+      private settingsService: SettingsService,
+      private jiraCredentialsService: JiraCredentialsService
    ) {
       this.axios = electronService.remote.require('axios');
+      this.settingsService
+         .getJiraUrl()
+         .pipe(tap(jiraUrl => (this.apiUrl = `${jiraUrl}/rest/api/latest`)))
+         .subscribe();
    }
-   private axios: typeof axios;
 
    private static buildWorklogBody(worklog: Worklog) {
       return {
@@ -29,15 +38,6 @@ export class JiraApiService {
             .getStartTimeAsMoment()
             .format('YYYY-MM-DDTHH:mm:ss.SSSZZ'),
          timeSpentSeconds: worklog.getWorkedDuration().asSeconds()
-      };
-   }
-
-   private static authHeaders() {
-      return {
-         auth: {
-            username : 'username',
-            password : 'pass'
-         }
       };
    }
 
@@ -71,7 +71,7 @@ export class JiraApiService {
       return concat(
          setAsSending(),
          this.sendToJira(worklog).pipe(
-            map(() => setAsSent()),
+            map(result => setAsSent(result)),
             catchError(err => setAsError(err))
          )
       );
@@ -81,47 +81,43 @@ export class JiraApiService {
          return of(worklog);
       }
 
-      function setAsSent() {
-         worklog.setAsSent();
+      function setAsSent(result) {
+         worklog.setAsSent(result.id);
          return worklog;
       }
 
       function setAsError(err) {
-         console.error(JSON.stringify(err));
-         worklog.setAsError('unknown error');
+         console.error(err.response.data);
+         const errorMessage = _.get(
+            err,
+            'response.data.errorMessages[0]',
+            'Unknown error'
+         );
+         worklog.setAsError(errorMessage);
          return of(worklog);
       }
    }
 
    private sendToJira(worklog: Worklog) {
-      return this.settingsService
-         .getJiraUrl()
-         .pipe(
-            switchMap(jiraUrl =>
-               from(
-                  this.axios.post(
-                     `${jiraUrl}/rest/api/latest/issue/${worklog.issue.key}/worklog`,
-                     JiraApiService.buildWorklogBody(worklog),
-                     JiraApiService.authHeaders()
-                  )
-               )
-            )
-         );
+      return from(
+         this.axios.post(
+            `${this.apiUrl}/issue/${worklog.issue.key}/worklog`,
+            JiraApiService.buildWorklogBody(worklog),
+            this.authHeaders()
+         )
+      ).pipe(map(response => response.data));
    }
 
    searchIssues(text: string): Observable<Issue[]> {
-      return this.settingsService.getJiraUrl().pipe(
-         switchMap(jiraUrl =>
-            from(
-               this.axios.get(`${jiraUrl}/rest/api/latest/search`, {
-                  ...JiraApiService.authHeaders(),
-                  params: {
-                     jql: JiraApiService.getJql(text),
-                     validateQuery: false
-                  }
-               })
-            )
-         ),
+      return from(
+         this.axios.get(`${this.apiUrl}/search`, {
+            ...this.authHeaders(),
+            params: {
+               jql: JiraApiService.getJql(text),
+               validateQuery: false
+            }
+         })
+      ).pipe(
          map(response =>
             response.data.issues.map(
                (jiraIssue: any) =>
@@ -129,5 +125,26 @@ export class JiraApiService {
             )
          )
       );
+   }
+
+   deleteWorklog(worklog: Worklog) {
+      return from(
+         this.axios.delete(
+            `${this.apiUrl}/issue/${worklog.issue.key}/worklog/${worklog.id}`,
+            this.authHeaders()
+         )
+      );
+   }
+
+   checkCredentials(username, password): Observable<UserInfo> {
+      return from(
+         this.axios.get<UserInfo>(`${this.apiUrl}/myself`, {
+            auth: { username, password }
+         })
+      ).pipe(map(response => response.data));
+   }
+
+   private authHeaders() {
+      return { auth: this.jiraCredentialsService.getJiraCredentials() };
    }
 }

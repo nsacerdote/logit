@@ -36,6 +36,10 @@ import { SettingsService } from './services/settings.service';
 import { WorkdayService } from './services/workday.service';
 import { IssueAutocompleteService } from './services/issue-autocomplete.service';
 import { IssueCacheService } from './services/issue-cache.service';
+import { DialogService } from './services/dialog.service';
+import { ConfirmationDialogComponent } from './shared/confirmation-dialog/confirmation-dialog.component';
+import { LoginComponent } from './components/login/login.component';
+import { JiraCredentialsService } from './services/jira-credentials.service';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -54,7 +58,13 @@ export function HttpLoaderFactory(http: HttpClient) {
       WorkdaySummaryComponent,
       TimepickerComponent,
       IssueAutocompleteComponent,
-      WorklogStatusComponent
+      WorklogStatusComponent,
+      ConfirmationDialogComponent,
+      LoginComponent
+   ],
+   entryComponents : [
+      ConfirmationDialogComponent,
+      LoginComponent
    ],
    imports: [
       BrowserModule,
@@ -77,9 +87,11 @@ export function HttpLoaderFactory(http: HttpClient) {
       JiraApiService,
       LoginService,
       SettingsService,
+      JiraCredentialsService,
       WorkdayService,
       IssueAutocompleteService,
-      IssueCacheService
+      IssueCacheService,
+      DialogService
    ],
    bootstrap: [AppComponent]
 })

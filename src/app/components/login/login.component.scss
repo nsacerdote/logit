@@ -1,0 +1,24 @@
+@import "_colors";
+
+h4 {
+   margin-top: 0;
+}
+
+table,
+mat-form-field {
+   width: 100%;
+}
+
+button {
+   width: 100%;
+}
+
+.error {
+   color: $errorColor;
+   font-size: 14px;
+   margin: 10px 0;
+}
+
+mat-spinner {
+   margin: 0 auto 20px;
+}

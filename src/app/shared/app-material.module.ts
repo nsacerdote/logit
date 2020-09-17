@@ -13,6 +13,8 @@ import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDialogModule } from '@angular/material';
+import { A11yModule } from '@angular/cdk/a11y';
 
 @NgModule({
    exports: [
@@ -29,7 +31,9 @@ import { MatTooltipModule } from '@angular/material/tooltip';
       MatMomentDateModule,
       MatProgressBarModule,
       MatProgressSpinnerModule,
-      MatTooltipModule
+      MatTooltipModule,
+      MatDialogModule,
+      A11yModule
    ]
 })
 export class AppMaterialModule {}

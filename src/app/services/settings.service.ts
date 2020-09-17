@@ -5,10 +5,11 @@ import { Setting } from '../models/setting.model';
 import { map } from 'rxjs/operators';
 
 const KEYS = {
-   JIRA_URL: 'JIRA_URL'
+   JIRA_URL: 'JIRA_URL',
+   JIRA_USER: 'JIRA_USER'
 };
 /**
- * This service is responsible for providing a way to access the settings configured in the settings screen
+ * This service is responsible for providing a way to access the settings configured in the settings/login screen
  */
 @Injectable()
 export class SettingsService {
@@ -31,6 +32,18 @@ export class SettingsService {
    saveJiraUrl(newJiraUrl): Observable<string> {
       return SettingsService.settingValue(
          this.settingDb.upsert(new Setting(KEYS.JIRA_URL, newJiraUrl))
+      );
+   }
+
+   getJiraUser(): Observable<string> {
+      return SettingsService.settingValue(
+         this.settingDb.findById(KEYS.JIRA_USER)
+      );
+   }
+
+   saveJiraUser(user): Observable<string> {
+      return SettingsService.settingValue(
+         this.settingDb.upsert(new Setting(KEYS.JIRA_USER, user))
       );
    }
 }

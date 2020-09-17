@@ -4,9 +4,8 @@ import { map } from 'rxjs/operators';
 import * as moment from 'moment';
 
 import { Workday } from '../models/workday.model';
-import { Worklog, WorklogStatus } from '../models/worklog.model';
+import { Worklog } from '../models/worklog.model';
 import { Database } from '../entity/database';
-import { Issue } from '../models/issue.model';
 import { TimeUtils } from '../shared/utils/time.utils';
 
 /**
@@ -43,10 +42,6 @@ export class WorkdayService {
    }
 
    private create(date: moment.Moment) {
-      return new Workday(
-         date,
-         [new Worklog('08:00', '', '', new Issue(), WorklogStatus.NOT_SENT)],
-         ''
-      );
+      return new Workday(date, [new Worklog()], '');
    }
 }

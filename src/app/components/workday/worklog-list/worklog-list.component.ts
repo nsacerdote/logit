@@ -11,12 +11,14 @@ import {
    FormControl,
    NG_VALUE_ACCESSOR
 } from '@angular/forms';
-import { Worklog, WorklogStatus } from '../../../models/worklog.model';
+import { Worklog } from '../../../models/worklog.model';
 import { BaseControlValueAccessorComponent } from '../../../shared/base-control-value-accessor.component';
 import { Observable } from 'rxjs';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { Issue } from '../../../models/issue.model';
 import * as moment from 'moment';
+import { JiraApiService } from '../../../services/jira-api.service';
+import { switchMap, tap } from 'rxjs/operators';
+import { DialogService } from '../../../services/dialog.service';
 
 @Component({
    selector: 'app-worklog-list',
@@ -38,7 +40,12 @@ export class WorklogListComponent extends BaseControlValueAccessorComponent
    worklogsFormArray: FormArray;
    focusIndex = -1;
 
-   constructor(private fb: FormBuilder, private cdRef: ChangeDetectorRef) {
+   constructor(
+      private fb: FormBuilder,
+      private cdRef: ChangeDetectorRef,
+      private jiraApiService: JiraApiService,
+      private dialogService: DialogService
+   ) {
       super();
    }
 
@@ -47,13 +54,7 @@ export class WorklogListComponent extends BaseControlValueAccessorComponent
    }
 
    addNewWorklog() {
-      const worklogToAdd = new Worklog(
-         '',
-         '',
-         '',
-         new Issue('', ''),
-         WorklogStatus.NOT_SENT
-      );
+      const worklogToAdd = new Worklog();
       const lastFormControl = this.getLastFormControl();
       if (lastFormControl) {
          worklogToAdd.startTime = lastFormControl.value.endTime;
@@ -63,6 +64,28 @@ export class WorklogListComponent extends BaseControlValueAccessorComponent
    }
 
    deleteWorklog(index: number) {
+      const worklog = Worklog.of(this.worklogsFormArray.at(index).value);
+      if (worklog.isSent()) {
+         this.requestWorklogDeletion(worklog)
+            .pipe(
+               tap(() => {
+                  this.removeWorklogFromArray(index);
+                  this.cdRef.detectChanges();
+               })
+            )
+            .subscribe();
+      } else {
+         this.removeWorklogFromArray(index);
+      }
+   }
+
+   private requestWorklogDeletion(worklog) {
+      return this.dialogService
+         .confirm('Do you really want to delete this worklog?')
+         .pipe(switchMap(() => this.jiraApiService.deleteWorklog(worklog)));
+   }
+
+   private removeWorklogFromArray(index) {
       this.worklogsFormArray.removeAt(index);
    }
 
