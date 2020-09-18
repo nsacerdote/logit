@@ -1,15 +1,12 @@
-import * as _ from 'lodash';
 import axios from 'axios';
 import { Injectable } from '@angular/core';
-import { combineLatest, concat, from, Observable, of } from 'rxjs';
-import { catchError, concatMap, map, tap } from 'rxjs/operators';
+import { from, Observable } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 
-import { Worklog } from '../models/worklog.model';
 import { ElectronService } from './electron.service';
 import { SettingsService } from './settings.service';
 import { Issue } from '../models/issue.model';
 import { UserInfo } from '../models/user-info.model';
-import { JiraCredentialsService } from './jira-credentials.service';
 
 /**
  * This service is responsible for contacting jira rest api (login, get autocomplete list, send worklogs, ...)
@@ -18,27 +15,20 @@ import { JiraCredentialsService } from './jira-credentials.service';
 export class JiraApiService {
    private axios: typeof axios;
    private apiUrl: string;
+   private credentials: {
+      username: string;
+      password: string;
+   } = null;
 
    constructor(
       electronService: ElectronService,
-      private settingsService: SettingsService,
-      private jiraCredentialsService: JiraCredentialsService
+      private settingsService: SettingsService
    ) {
       this.axios = electronService.remote.require('axios');
       this.settingsService
          .getJiraUrl()
          .pipe(tap(jiraUrl => (this.apiUrl = `${jiraUrl}/rest/api/latest`)))
          .subscribe();
-   }
-
-   private static buildWorklogBody(worklog: Worklog) {
-      return {
-         comment: worklog.description,
-         started: worklog
-            .getStartTimeAsMoment()
-            .format('YYYY-MM-DDTHH:mm:ss.SSSZZ'),
-         timeSpentSeconds: worklog.getWorkedDuration().asSeconds()
-      };
    }
 
    private static getJql(text: string): string {
@@ -49,60 +39,11 @@ export class JiraApiService {
       }
    }
 
-   sendWorklogs(worklogs: Worklog[]): Observable<Worklog[]> {
-      const groupedWorklogs = _.groupBy(worklogs, 'issue.key');
-      return combineLatest(
-         _.map(groupedWorklogs, gW => this.sendWorklogsSequentially(gW))
-      ).pipe(map(groupedResults => _.flatten(groupedResults)));
-   }
-
-   private sendWorklogsSequentially(worklogs: Worklog[]) {
-      return from(worklogs).pipe(
-         concatMap(w => this.sendWorklog(w)),
-         map(() => worklogs)
-      );
-   }
-
-   private sendWorklog(worklog: Worklog) {
-      if (worklog.isSent()) {
-         return of(worklog);
-      }
-
-      return concat(
-         setAsSending(),
-         this.sendToJira(worklog).pipe(
-            map(result => setAsSent(result)),
-            catchError(err => setAsError(err))
-         )
-      );
-
-      function setAsSending() {
-         worklog.setAsSending();
-         return of(worklog);
-      }
-
-      function setAsSent(result) {
-         worklog.setAsSent(result.id);
-         return worklog;
-      }
-
-      function setAsError(err) {
-         console.error(err.response.data);
-         const errorMessage = _.get(
-            err,
-            'response.data.errorMessages[0]',
-            'Unknown error'
-         );
-         worklog.setAsError(errorMessage);
-         return of(worklog);
-      }
-   }
-
-   private sendToJira(worklog: Worklog) {
+   sendWorklog(issueKey: string, worklog: JiraWorklogModel) {
       return from(
          this.axios.post(
-            `${this.apiUrl}/issue/${worklog.issue.key}/worklog`,
-            JiraApiService.buildWorklogBody(worklog),
+            `${this.apiUrl}/issue/${issueKey}/worklog`,
+            worklog,
             this.authHeaders()
          )
       ).pipe(map(response => response.data));
@@ -127,24 +68,58 @@ export class JiraApiService {
       );
    }
 
-   deleteWorklog(worklog: Worklog) {
+   deleteWorklog(issueKey, worklogId) {
       return from(
          this.axios.delete(
-            `${this.apiUrl}/issue/${worklog.issue.key}/worklog/${worklog.id}`,
+            `${this.apiUrl}/issue/${issueKey}/worklog/${worklogId}`,
             this.authHeaders()
          )
       );
    }
 
-   checkCredentials(username, password): Observable<UserInfo> {
+   checkAndSaveCredentials(username, password): Observable<UserInfo> {
       return from(
          this.axios.get<UserInfo>(`${this.apiUrl}/myself`, {
             auth: { username, password }
          })
-      ).pipe(map(response => response.data));
+      ).pipe(
+         tap(() => (this.credentials = { username, password })),
+         map(response => response.data)
+      );
+   }
+
+   clearJiraCredentials() {
+      this.credentials = null;
    }
 
    private authHeaders() {
-      return { auth: this.jiraCredentialsService.getJiraCredentials() };
+      return { auth: this.credentials };
    }
+
+   getImage(url: string) {
+      return from(
+         this.axios.get(url, {
+            responseType: 'arraybuffer',
+            ...this.authHeaders()
+         })
+      ).pipe(
+         map(response => {
+            const image = btoa(
+               new Uint8Array(response.data).reduce(
+                  (data, byte) => data + String.fromCharCode(byte),
+                  ''
+               )
+            );
+            return `data:${response.headers[
+               'content-type'
+            ].toLowerCase()};base64,${image}`;
+         })
+      );
+   }
+}
+
+interface JiraWorklogModel {
+   comment: string;
+   started: string;
+   timeSpentSeconds: number;
 }

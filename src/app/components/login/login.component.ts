@@ -6,7 +6,6 @@ import {
 } from '@angular/core';
 import { LoginService } from '../../services/login.service';
 import { SettingsService } from '../../services/settings.service';
-import { tap } from 'rxjs/operators';
 import { MatDialogRef } from '@angular/material';
 
 @Component({
@@ -28,10 +27,12 @@ export class LoginComponent implements OnInit {
    ) {}
 
    ngOnInit() {
-      this.settingsService
-         .getJiraUser()
-         .pipe(tap(user => (this.username = user)))
-         .subscribe();
+      this.settingsService.getJiraUser().subscribe({
+         next: user => {
+            this.username = user;
+            this.cdRef.detectChanges();
+         }
+      });
    }
 
    login() {

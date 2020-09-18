@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { concat, Observable, of } from 'rxjs';
 import { Issue } from '../models/issue.model';
-import { JiraApiService } from './jira-api.service';
+import { JiraService } from './jira.service';
 import { IssueCacheService } from './issue-cache.service';
 import { scan } from 'rxjs/operators';
 import * as _ from 'lodash';
@@ -12,7 +12,7 @@ import * as _ from 'lodash';
 @Injectable()
 export class IssueAutocompleteService {
    constructor(
-      private jiraApiService: JiraApiService,
+      private jiraService: JiraService,
       private issueCacheService: IssueCacheService
    ) {}
 
@@ -35,7 +35,7 @@ export class IssueAutocompleteService {
       if (!searchText || searchText.length < 3) {
          return of([]);
       }
-      return this.jiraApiService.searchIssues(searchText);
+      return this.jiraService.searchIssues(searchText);
    }
 
    issueSelected(issue: Issue) {

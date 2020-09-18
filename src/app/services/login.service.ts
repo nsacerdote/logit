@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { JiraApiService } from './jira-api.service';
 import { tap } from 'rxjs/operators';
 import { UserInfo } from '../models/user-info.model';
-import { JiraCredentialsService } from './jira-credentials.service';
+import { JiraService } from './jira.service';
 
 /**
  * This service is responsible for holding the login info and status, perform login and logout operations
@@ -12,21 +11,17 @@ import { JiraCredentialsService } from './jira-credentials.service';
 export class LoginService {
    private userInfo = new BehaviorSubject<UserInfo>(null);
 
-   constructor(
-      private jiraApiService: JiraApiService,
-      private jiraCredentialsService: JiraCredentialsService
-   ) {}
+   constructor(private jiraService: JiraService) {}
 
    login(user, pass) {
-      return this.jiraApiService.checkCredentials(user, pass).pipe(
-         tap(userInfo => this.userInfo.next(userInfo)),
-         tap(() => this.jiraCredentialsService.saveJiraCredentials(user, pass))
-      );
+      return this.jiraService
+         .checkAndSaveCredentials(user, pass)
+         .pipe(tap(userInfo => this.userInfo.next(userInfo)));
    }
 
    logout() {
       this.userInfo.next(null);
-      this.jiraCredentialsService.clearJiraCredentials();
+      this.jiraService.clearJiraCredentials();
    }
 
    getUserInfo() {

@@ -16,9 +16,9 @@ import { BaseControlValueAccessorComponent } from '../../../shared/base-control-
 import { Observable } from 'rxjs';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import * as moment from 'moment';
-import { JiraApiService } from '../../../services/jira-api.service';
 import { switchMap, tap } from 'rxjs/operators';
 import { DialogService } from '../../../services/dialog.service';
+import { JiraService } from '../../../services/jira.service';
 
 @Component({
    selector: 'app-worklog-list',
@@ -43,7 +43,7 @@ export class WorklogListComponent extends BaseControlValueAccessorComponent
    constructor(
       private fb: FormBuilder,
       private cdRef: ChangeDetectorRef,
-      private jiraApiService: JiraApiService,
+      private jiraService: JiraService,
       private dialogService: DialogService
    ) {
       super();
@@ -82,7 +82,7 @@ export class WorklogListComponent extends BaseControlValueAccessorComponent
    private requestWorklogDeletion(worklog) {
       return this.dialogService
          .confirm('Do you really want to delete this worklog?')
-         .pipe(switchMap(() => this.jiraApiService.deleteWorklog(worklog)));
+         .pipe(switchMap(() => this.jiraService.deleteWorklog(worklog)));
    }
 
    private removeWorklogFromArray(index) {

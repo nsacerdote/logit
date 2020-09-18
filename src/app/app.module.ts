@@ -39,7 +39,7 @@ import { IssueCacheService } from './services/issue-cache.service';
 import { DialogService } from './services/dialog.service';
 import { ConfirmationDialogComponent } from './shared/confirmation-dialog/confirmation-dialog.component';
 import { LoginComponent } from './components/login/login.component';
-import { JiraCredentialsService } from './services/jira-credentials.service';
+import { JiraService } from './services/jira.service';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -62,10 +62,7 @@ export function HttpLoaderFactory(http: HttpClient) {
       ConfirmationDialogComponent,
       LoginComponent
    ],
-   entryComponents : [
-      ConfirmationDialogComponent,
-      LoginComponent
-   ],
+   entryComponents: [ConfirmationDialogComponent, LoginComponent],
    imports: [
       BrowserModule,
       BrowserAnimationsModule,
@@ -85,9 +82,9 @@ export function HttpLoaderFactory(http: HttpClient) {
    providers: [
       ElectronService,
       JiraApiService,
+      JiraService,
       LoginService,
       SettingsService,
-      JiraCredentialsService,
       WorkdayService,
       IssueAutocompleteService,
       IssueCacheService,

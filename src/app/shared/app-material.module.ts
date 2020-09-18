@@ -13,7 +13,7 @@ import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatDialogModule } from '@angular/material';
+import { MatDialogModule, MatMenuModule } from '@angular/material';
 import { A11yModule } from '@angular/cdk/a11y';
 
 @NgModule({
@@ -21,6 +21,7 @@ import { A11yModule } from '@angular/cdk/a11y';
       MatToolbarModule,
       MatIconModule,
       MatButtonModule,
+      MatMenuModule,
       MatSidenavModule,
       MatFormFieldModule,
       MatInputModule,

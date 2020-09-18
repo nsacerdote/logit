@@ -16,3 +16,11 @@ a.active {
 .brand {
    font-size: 18px;
 }
+
+.avatar {
+   height: 36px;
+   width: 36px;
+   border-radius: 50%;
+   flex-shrink: 0;
+   object-fit: cover;
+}

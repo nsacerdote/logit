@@ -1,20 +1,36 @@
 <mat-toolbar color="primary" class="mat-elevation-z4">
-   <a class="brand"
-      routerLink="/workday"
-      routerLinkActive="active"
-      mat-button>
+   <a class="brand" routerLink="/workday" routerLinkActive="active" mat-button>
       Worklog
    </a>
 
    <span class="fill-remaining-space"></span>
 
-   <a routerLink="/settings"
-      routerLinkActive="active"
-      mat-icon-button>
+   <a routerLink="/settings" routerLinkActive="active" mat-icon-button>
       <mat-icon>settings</mat-icon>
    </a>
-   <a mat-button
-      (click)="openLogin()">
-      Log In
-   </a>
+   <ng-container *ngIf="userInfo$ | async as userInfo; else login">
+      <a mat-icon-button [matMenuTriggerFor]="profileMenu">
+         <img
+            *ngIf="userImage$ | async as userImage; else placeholderAvatar"
+            [src]="userImage"
+            [alt]="userInfo.displayName"
+            class="avatar"
+         />
+         <ng-template #placeholderAvatar>
+            <img
+               src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAHXRFWHRqaXJhLXN5c3RlbS1pbWFnZS10eXBlAGF2YXRhcuQCGmEAAALASURBVHja3VrPSxtBFN4/wT9l/4TFuxB66sGb4FHxVGgP5iJ406v0EATx4KEiXgo9BCGgiILapi34IwRE29hm29DQ43S+sgOTdXd23ptJVjfwQdjsvHxv9r3vzZvZIPDwOTg8iyTqEk2JjoTIQSe5B/dGQZkfSSCUaEjEBsJFiBMb4SSJR8ksCs9ojvWpSONTErtjIJ4G/mPKN/maY6hwQqvmi3x9gsTTqLuSb5RIXqHxnMnznCg5bNzCKUlY1p+ct69E9/ab6McD8Wf4dwS4ht9wj4MTNRupjDnEs0jnAfcyHYmNEsvRecyqLfE0MJZTJ0wVdmLkHZ2IshxoTpq8gxPNrIUZKeZ9kVdg5ETI1nybhD06aYu3W/ti+90H8fHztVVis2sDRXmKZh/EX84vi+kXCyNYfLMuvj/0fT6FmJW8ptjHTKeJ65hbWjU6wciFiFx1fw+GuQQwy4rszOwrsb6x8x/4rq4jrPLGwza5OlPVxxQC+mwjlNT1vfetkadgskFWo4IellRtdQfSeZH3m2OV7gQ+ZVOFEMJGv76ytmn9BKgJHfiSzayEhiMgrM++KQc4shq4xn0eXq9sPFIhyGuRlFLzYWwO6Iqk6sBN945ko9QQ0h2AClHHew0hztpHd0CXVN9rI68yqgPJqgoaJXQ4MkoqZLf3DyQlopCHbU4hIy0lPn3tWJGB2uApALbKA9ucpQRpMdc6vrAig2W0ygF8txkD26zOjNrI23RjVAcYK9GY3dAcnraNq1J9EWcjobAFmy4NTUhtrL9cdr21k7DFaOxDp6aeqkgeledxU8/dVkHS9X78YpPHWEbiityDEM7GFgjc936SyWMMk/yu961FlRM2iY17mDFfvLXourmLGQW5rLDCNfzGnHW7zd1KbK9X4oCjEkdMlTjkq8QxayUOuivxqkFlXvZ4aq/b/AMuASR6iKhVVAAAAABJRU5ErkJggrS6Y7WknkdbkkuKqINPx2OU2ZggcZr6uN3lWvJKbbdERxEQwQiMk/Z0qxvSSTz57qMmpVbrHxXbxl0wkjhC2cwk1tb5q/0GBMRHnr4UYVSWMbmZ22a0ERBbs4Rsjd3dP9o2MN+ATdimBAO46zIappwDxReWtZWj1eLLuAq1k1AQh00iwsZ5YJDiAJQivrBku8SQ1X7YoiicgfPePCAuFyKU2ti05HBAlaI82TZAdrGvX4gYYyBItRKN/WBb27+UyaMubCggmDETi2QOU6wgdr/MfdOODKlAHdQlJq4W+8ZbnPQs9FMUKenEbEyb+mXI4Bk8izoK5BOCY+bJnOGETvlwF6qEMx6UivLDGeECqVSQSyOsD3cNTvRTT+oKAFwA9qd/WfQXHEV/xWS5HxAVg/84bPxWDxT9Nev/cdGd5oiPFeNfDbI4Upx/9rAYFZSC/93mrwADANks158tpyGwAAAAAElFTkSuQmCC"
+               [alt]="userInfo.displayName"
+               class="avatar"
+            />
+         </ng-template>
+      </a>
+      <mat-menu #profileMenu="matMenu">
+         <button mat-menu-item (click)="logout()">Logout</button>
+      </mat-menu>
+   </ng-container>
+   <ng-template #login>
+      <a mat-button (click)="openLogin()">
+         Log In
+      </a>
+   </ng-template>
 </mat-toolbar>
