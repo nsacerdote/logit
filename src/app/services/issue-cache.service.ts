@@ -26,8 +26,8 @@ export class IssueCacheService {
       return this.issueCacheDb
          .find({
             $or: [
-               { description: { $regex: new RegExp(text, 'i') } },
-               { key: { $regex: new RegExp(text, 'i') } }
+               { description: { $regex: new RegExp(_.escapeRegExp(text), 'i') } },
+               { key: { $regex: new RegExp(_.escapeRegExp(text), 'i') } }
             ]
          })
          .pipe(

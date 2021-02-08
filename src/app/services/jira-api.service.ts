@@ -31,12 +31,31 @@ export class JiraApiService {
          .subscribe();
    }
 
-   private static getJql(text: string): string {
-      if (text) {
-         return `(status != "Closed" AND status != "Resolved" AND text~"${text}") OR key=${text}`;
-      } else {
+   private static getJql(query: string): string {
+      if (!query) {
          return '';
       }
+      query = query.replace(/"/g, '\\"');
+      if (this.isIssueKey(query)) {
+         return `key="${query}" OR text~"${query}"`;
+      }
+      const [firstWord, ...rest] = query.split(' ');
+      let projectPart = '';
+      if (this.isProjectKey(firstWord)) {
+         projectPart = `AND project="${firstWord}"`;
+         query = rest.join(' ');
+      }
+      const queryPart = query ? `AND text~"${query}"` : '';
+      console.log(`status != "Closed" AND status != "Resolved" ${queryPart} ${projectPart}`);
+      return `status != "Closed" AND status != "Resolved" ${queryPart} ${projectPart}`;
+   }
+
+   private static isIssueKey(s: string): boolean {
+      return (/^[A-Z][A-Z0-9]{1,9}-[0-9]+$/).test(s);
+   }
+
+   private static isProjectKey(s: string): boolean {
+      return (/^[A-Z][A-Z0-9]{1,9}$/).test(s);
    }
 
    sendWorklog(issueKey: string, worklog: JiraWorklogModel) {
