@@ -1,7 +1,8 @@
 import {
    ChangeDetectionStrategy,
    ChangeDetectorRef,
-   Component, OnDestroy,
+   Component,
+   OnDestroy,
    OnInit
 } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
@@ -12,6 +13,7 @@ import * as moment from 'moment';
 import { Workday } from '../../models/workday.model';
 import { WorkdayService } from '../../services/workday.service';
 import { JiraService } from '../../services/jira.service';
+import { ElectronService } from '../../services/electron.service';
 
 @Component({
    selector: 'app-workday',
@@ -24,12 +26,14 @@ export class WorkdayComponent implements OnInit, OnDestroy {
    workdayForm: FormGroup;
    selectedDate$: BehaviorSubject<moment.Moment>;
    sendingWorklogs = false;
+   private savedOnExit = false;
 
    constructor(
       private fb: FormBuilder,
       private cdRef: ChangeDetectorRef,
       private workdayService: WorkdayService,
-      private jiraService: JiraService
+      private jiraService: JiraService,
+      public electronService: ElectronService
    ) {}
 
    ngOnInit() {
@@ -37,6 +41,7 @@ export class WorkdayComponent implements OnInit, OnDestroy {
       this.selectedDate$ = new BehaviorSubject<moment.Moment>(initialDate);
       this.loadDate(initialDate).subscribe();
       this.subscribeToSelectedDate();
+      this.preventCloseForSaving();
    }
 
    private loadDate(date: moment.Moment) {
@@ -111,5 +116,19 @@ export class WorkdayComponent implements OnInit, OnDestroy {
 
    ngOnDestroy(): void {
       this.save().subscribe();
+   }
+
+   private preventCloseForSaving() {
+      window.onbeforeunload = event => {
+         if (!this.savedOnExit) {
+            event.returnValue = false;
+            this.save()
+               .subscribe()
+               .add(() => {
+                  this.savedOnExit = true;
+                  this.electronService.remote.getCurrentWindow().close();
+               });
+         }
+      };
    }
 }

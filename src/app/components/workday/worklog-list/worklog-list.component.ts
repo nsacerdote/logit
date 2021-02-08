@@ -6,6 +6,7 @@ import {
    OnInit
 } from '@angular/core';
 import {
+   AbstractControl,
    FormArray,
    FormBuilder,
    FormControl,
@@ -19,6 +20,7 @@ import * as moment from 'moment';
 import { switchMap, tap } from 'rxjs/operators';
 import { DialogService } from '../../../services/dialog.service';
 import { JiraService } from '../../../services/jira.service';
+import { TimeUtils } from '../../../shared/utils/time.utils';
 
 @Component({
    selector: 'app-worklog-list',
@@ -35,11 +37,6 @@ import { JiraService } from '../../../services/jira.service';
 })
 export class WorklogListComponent extends BaseControlValueAccessorComponent
    implements OnInit {
-   @Input() worklogsDate: moment.Moment;
-
-   worklogsFormArray: FormArray;
-   focusIndex = -1;
-
    constructor(
       private fb: FormBuilder,
       private cdRef: ChangeDetectorRef,
@@ -48,19 +45,46 @@ export class WorklogListComponent extends BaseControlValueAccessorComponent
    ) {
       super();
    }
+   @Input() worklogsDate: moment.Moment;
+   @Input() minuteStep = 5;
+
+   worklogsFormArray: FormArray;
+   focusIndex = -1;
+
+   private static prepareNewWorklog(startTime) {
+      const result = new Worklog();
+      result.startTime = startTime || result.startTime;
+      return result;
+   }
 
    ngOnInit() {
       this.worklogsFormArray = this.fb.array([]);
    }
 
    addNewWorklog() {
-      const worklogToAdd = new Worklog();
-      const lastFormControl = this.getLastFormControl();
-      if (lastFormControl) {
-         worklogToAdd.startTime = lastFormControl.value.endTime;
-      }
-      this.worklogsFormArray.push(new FormControl(worklogToAdd));
+      const endTime = this.setLastWorklogEndtime();
+      this.worklogsFormArray.push(
+         new FormControl(WorklogListComponent.prepareNewWorklog(endTime))
+      );
       this.focusIndex = this.worklogsFormArray.length - 1;
+   }
+
+   private setLastWorklogEndtime() {
+      const lastFormControl = this.getLastFormControl();
+      const lastWorklog: Worklog =
+         lastFormControl && Worklog.of(lastFormControl.value);
+      if (!lastWorklog) {
+         return null;
+      }
+
+      if (!lastWorklog.endTime) {
+         lastWorklog.endTime = TimeUtils.getRoundedTimeString(
+            moment(),
+            this.minuteStep
+         );
+         lastFormControl.patchValue(lastWorklog);
+      }
+      return lastWorklog.endTime;
    }
 
    deleteWorklog(index: number) {

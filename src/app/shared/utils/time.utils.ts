@@ -17,6 +17,13 @@ export class TimeUtils {
       }
    }
 
+   public static getRoundedTimeString(
+      date: moment.Moment,
+      minuteStep: number
+   ) {
+      return this.momentTimeToString(this.getRoundedTime(date, minuteStep));
+   }
+
    public static getClosestHour(
       date: moment.Moment,
       minuteStep: number
@@ -79,15 +86,5 @@ export class TimeUtils {
          result = days + 'd ' + result;
       }
       return result;
-   }
-
-   static getPositiveDurationDifference(
-      a: moment.Duration,
-      b: moment.Duration
-   ): moment.Duration {
-      if (a.asMilliseconds() > b.asMilliseconds()) {
-         return a.subtract(b);
-      }
-      return moment.duration(0);
    }
 }
