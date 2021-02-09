@@ -7,6 +7,8 @@ import {
 import { LoginService } from '../../services/login.service';
 import { SettingsService } from '../../services/settings.service';
 import { MatDialogRef } from '@angular/material';
+import { catchError, switchMap, tap } from 'rxjs/operators';
+import { throwError } from 'rxjs';
 
 @Component({
    selector: 'app-login',
@@ -39,20 +41,22 @@ export class LoginComponent implements OnInit {
       this.status = 'LOADING';
       this.loginService
          .login(this.username, this.password)
-         .subscribe({
-            next: () => {
-               this.settingsService.saveJiraUser(this.username);
+         .pipe(
+            switchMap(() => this.settingsService.saveJiraUser(this.username)),
+            tap(() => {
                this.dialogRef.close();
-            },
-            complete: () => (this.status = 'IDLE'),
-            error: err => {
+               this.status = 'IDLE';
+            }),
+            catchError(err => {
                if (err.response.status === 401) {
                   this.status = 'ERROR_401';
                } else {
                   this.status = 'ERROR';
                }
-            }
-         })
+               return throwError(err);
+            })
+         )
+         .subscribe()
          .add(() => this.cdRef.detectChanges());
    }
 }

@@ -72,7 +72,7 @@ export class WorkdayComponent implements OnInit, OnDestroy {
    private setWorkdayForm(workday: Workday) {
       this.workdayForm = this.fb.group({
          worklogs: [workday.worklogs],
-         reminder: [workday.reminders]
+         reminders: [workday.reminders]
       });
    }
 

@@ -2,9 +2,11 @@ import {
    ChangeDetectionStrategy,
    Component,
    Input,
-   OnInit
+   OnChanges,
+   ViewChild
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 
 @Component({
    selector: 'app-reminders',
@@ -12,10 +14,13 @@ import { FormControl } from '@angular/forms';
    styleUrls: ['./reminders.component.scss'],
    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class RemindersComponent implements OnInit {
+export class RemindersComponent implements OnChanges {
    @Input() remindersFormControl: FormControl;
+   @ViewChild('autosize', { static: true }) autosize: CdkTextareaAutosize;
 
    constructor() {}
 
-   ngOnInit() {}
+   ngOnChanges() {
+      setTimeout(() => this.autosize.resizeToFitContent(true), 0);
+   }
 }

@@ -7,6 +7,7 @@
               placeholder="Write a reminder"
               [formControl]="remindersFormControl"
               [cdkTextareaAutosize]="true"
+              #autosize="cdkTextareaAutosize"
               [cdkAutosizeMinRows]="3">
     </textarea>
    </mat-card-content>
