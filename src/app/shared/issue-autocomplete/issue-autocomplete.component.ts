@@ -49,7 +49,7 @@ export class IssueAutocompleteComponent
       SELECT: 'SELECT'
    };
 
-   @Input() disabled = false;
+   @Input() attrDisabled = false;
 
    issueGroup: FormGroup;
    opened = false;
@@ -72,8 +72,8 @@ export class IssueAutocompleteComponent
 
    ngOnInit() {
       this.issueGroup = this.fb.group({
-         key: { value: '', disabled: this.disabled },
-         description: { value: '', disabled: this.disabled }
+         key: { value: '', disabled: this.attrDisabled },
+         description: { value: '', disabled: this.attrDisabled }
       });
       this.$input = new Subject<string>();
       this.$selectedOptionEvents = new Subject<string>();
@@ -83,7 +83,7 @@ export class IssueAutocompleteComponent
    }
 
    ngOnChanges(changes: SimpleChanges): void {
-      if (!changes.disabled.isFirstChange()) {
+      if (!changes.attrDisabled.isFirstChange()) {
          this.updateDisabledStatus();
       }
    }
@@ -211,7 +211,7 @@ export class IssueAutocompleteComponent
    }
 
    private updateDisabledStatus() {
-      if (this.disabled) {
+      if (this.attrDisabled) {
          this.issueGroup.disable();
       } else {
          this.issueGroup.enable();

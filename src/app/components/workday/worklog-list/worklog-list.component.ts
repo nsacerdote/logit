@@ -116,7 +116,7 @@ export class WorklogListComponent extends BaseControlValueAccessorComponent
    drop(event: CdkDragDrop<string[]>) {
       const worklogs = this.worklogsFormArray.value;
       moveItemInArray(worklogs, event.previousIndex, event.currentIndex);
-      this.worklogsFormArray.setValue(worklogs);
+      this.worklogsFormArray.setValue(worklogs.map(w => Worklog.of(w)));
    }
 
    writeValue(worklogs: Worklog[]): void {
