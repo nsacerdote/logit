@@ -4,7 +4,7 @@ import { map } from 'rxjs/operators';
 
 import { Database } from '../entity/database';
 import { Issue } from '../models/issue.model';
-import * as _ from 'lodash';
+import { escapeRegExp, take } from 'lodash-es';
 
 @Injectable()
 export class IssueCacheService {
@@ -26,12 +26,12 @@ export class IssueCacheService {
       return this.issueCacheDb
          .find({
             $or: [
-               { description: { $regex: new RegExp(_.escapeRegExp(text), 'i') } },
-               { key: { $regex: new RegExp(_.escapeRegExp(text), 'i') } }
+               { description: { $regex: new RegExp(escapeRegExp(text), 'i') } },
+               { key: { $regex: new RegExp(escapeRegExp(text), 'i') } }
             ]
          })
          .pipe(
-            map(issues => _.take(issues, 50)),
+            map(issues => take(issues, 50)),
             map(issues => issues.map(i => Issue.of(i)))
          );
    }

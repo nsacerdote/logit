@@ -1,4 +1,3 @@
-import * as _ from 'lodash';
 import { Injectable } from '@angular/core';
 import { combineLatest, concat, from, Observable, of } from 'rxjs';
 import { catchError, concatMap, map } from 'rxjs/operators';
@@ -7,6 +6,7 @@ import { Worklog } from '../models/worklog.model';
 import { Issue } from '../models/issue.model';
 import { UserInfo } from '../models/user-info.model';
 import { JiraApiService } from './jira-api.service';
+import { flatten, get, groupBy, map as lodashMap } from 'lodash-es';
 
 /**
  * This service is responsible for contacting jira rest api (login, get autocomplete list, send worklogs, ...)
@@ -26,10 +26,10 @@ export class JiraService {
    }
 
    sendWorklogs(worklogs: Worklog[]): Observable<Worklog[]> {
-      const groupedWorklogs = _.groupBy(worklogs, 'issue.key');
+      const groupedWorklogs = groupBy(worklogs, 'issue.key');
       return combineLatest(
-         _.map(groupedWorklogs, gW => this.sendWorklogsSequentially(gW))
-      ).pipe(map(groupedResults => _.flatten(groupedResults)));
+         lodashMap(groupedWorklogs, gW => this.sendWorklogsSequentially(gW))
+      ).pipe(map(groupedResults => flatten(groupedResults)));
    }
 
    private sendWorklogsSequentially(worklogs: Worklog[]) {
@@ -69,7 +69,7 @@ export class JiraService {
 
       function setAsError(err) {
          console.error(err.response.data);
-         const errorMessage = _.get(
+         const errorMessage = get(
             err,
             'response.data.errorMessages[0]',
             'Unknown error'

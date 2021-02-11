@@ -4,7 +4,7 @@ import { Issue } from '../models/issue.model';
 import { JiraService } from './jira.service';
 import { IssueCacheService } from './issue-cache.service';
 import { scan } from 'rxjs/operators';
-import * as _ from 'lodash';
+import { sortBy, unionBy } from 'lodash-es';
 
 /**
  * This service is responsible for providing autocomplete/search issues capabilities
@@ -23,7 +23,7 @@ export class IssueAutocompleteService {
       ).pipe(scan((acc, issues) => mergeIssues(acc, issues), []));
 
       function mergeIssues(acc: Issue[], issues: Issue[]) {
-         return _.unionBy(acc, _.sortBy(issues, 'key'), 'key');
+         return unionBy(acc, sortBy(issues, 'key'), 'key');
       }
    }
 
