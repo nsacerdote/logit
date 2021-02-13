@@ -46,7 +46,6 @@ export class JiraApiService {
          query = rest.join(' ');
       }
       const queryPart = query ? `AND text~"${query}"` : '';
-      console.log(`status != "Closed" AND status != "Resolved" ${queryPart} ${projectPart}`);
       return `status != "Closed" AND status != "Resolved" ${queryPart} ${projectPart}`;
    }
 

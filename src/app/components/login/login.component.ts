@@ -6,7 +6,7 @@ import {
 } from '@angular/core';
 import { LoginService } from '../../services/login.service';
 import { SettingsService } from '../../services/settings.service';
-import { MatDialogRef } from '@angular/material';
+import { MatDialogRef } from '@angular/material/dialog';
 import { catchError, switchMap, tap } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 

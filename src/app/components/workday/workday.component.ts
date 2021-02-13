@@ -126,7 +126,7 @@ export class WorkdayComponent implements OnInit, OnDestroy {
                .subscribe()
                .add(() => {
                   this.savedOnExit = true;
-                  // this.electronService.remote.getCurrentWindow().close();
+                  this.electronService.remote.getCurrentWindow().close();
                });
          }
       };

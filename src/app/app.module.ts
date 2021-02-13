@@ -62,7 +62,6 @@ export function HttpLoaderFactory(http: HttpClient) {
       ConfirmationDialogComponent,
       LoginComponent
    ],
-   entryComponents: [ConfirmationDialogComponent, LoginComponent],
    imports: [
       BrowserModule,
       BrowserAnimationsModule,
