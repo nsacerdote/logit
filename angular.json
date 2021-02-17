@@ -33,7 +33,10 @@
               "includePaths": [
                 "src/scss"
               ]
-            }
+            },
+             "allowedCommonJsDependencies": [
+                "nedb"
+             ]
           },
           "configurations": {
             "dev": {
