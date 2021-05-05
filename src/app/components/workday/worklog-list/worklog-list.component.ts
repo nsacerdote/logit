@@ -106,7 +106,7 @@ export class WorklogListComponent extends BaseControlValueAccessorComponent
    private requestWorklogDeletion(worklog) {
       return this.dialogService
          .confirm('Do you really want to delete this worklog?')
-         .pipe(switchMap(() => this.jiraService.deleteWorklog(worklog)));
+         .pipe(switchMap(() => this.jiraService.deleteWorkLog(worklog)));
    }
 
    private removeWorklogFromArray(index) {

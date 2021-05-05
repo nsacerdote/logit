@@ -109,7 +109,7 @@ export class WorkdayComponent implements OnInit, OnDestroy {
    }
 
    sendWorklogsToJira() {
-      return this.jiraService.sendWorklogs(
+      return this.jiraService.sendWorkLogs(
          this.getFormValueAsWorkday().worklogs
       );
    }

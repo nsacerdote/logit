@@ -28,8 +28,7 @@ export class HeaderComponent implements OnInit {
       this.userInfo$ = this.loginService.getUserInfo();
       this.userImage$ = this.userInfo$.pipe(
          filter(userInfo => !!userInfo),
-         map(userInfo => userInfo.avatarUrls['48x48']),
-         switchMap(avatarUrl => this.jiraService.getImage(avatarUrl)),
+         switchMap(userInfo => this.jiraService.getImage(userInfo.avatarUrl)),
          map(base64src =>
             this.sanitizer.bypassSecurityTrustResourceUrl(base64src)
          )

@@ -7,6 +7,7 @@ import { ElectronService } from './electron.service';
 import { SettingsService } from './settings.service';
 import { Issue } from '../models/issue.model';
 import { UserInfo } from '../models/user-info.model';
+import { WorkLogItem } from './remote-server.interface';
 
 /**
  * This service is responsible for contacting jira rest api (login, get autocomplete list, send worklogs, ...)
@@ -50,18 +51,18 @@ export class JiraApiService {
    }
 
    private static isIssueKey(s: string): boolean {
-      return (/^[A-Z][A-Z0-9]{1,9}-[0-9]+$/).test(s);
+      return /^[A-Z][A-Z0-9]{1,9}-[0-9]+$/.test(s);
    }
 
    private static isProjectKey(s: string): boolean {
-      return (/^[A-Z][A-Z0-9]{1,9}$/).test(s);
+      return /^[A-Z][A-Z0-9]{1,9}$/.test(s);
    }
 
-   sendWorklog(issueKey: string, worklog: JiraWorklogModel) {
+   sendWorkLog(issueKey: string, workLog: WorkLogItem) {
       return from(
          this.axios.post(
             `${this.apiUrl}/issue/${issueKey}/worklog`,
-            worklog,
+            workLog,
             this.authHeaders()
          )
       ).pipe(map(response => response.data));
@@ -86,10 +87,10 @@ export class JiraApiService {
       );
    }
 
-   deleteWorklog(issueKey, worklogId) {
+   deleteWorkLog(issueKey, workLogId) {
       return from(
          this.axios.delete(
-            `${this.apiUrl}/issue/${issueKey}/worklog/${worklogId}`,
+            `${this.apiUrl}/issue/${issueKey}/worklog/${workLogId}`,
             this.authHeaders()
          )
       );
@@ -97,21 +98,20 @@ export class JiraApiService {
 
    checkAndSaveCredentials(username, password): Observable<UserInfo> {
       return from(
-         this.axios.get<UserInfo>(`${this.apiUrl}/myself`, {
+         this.axios.get<JiraUserInfo>(`${this.apiUrl}/myself`, {
             auth: { username, password }
          })
       ).pipe(
          tap(() => (this.credentials = { username, password })),
-         map(response => response.data)
+         map(response => ({
+            displayName: response.data.displayName,
+            avatarUrl: response.data.avatarUrls['48x48']
+         }))
       );
    }
 
-   clearJiraCredentials() {
+   clearCredentials() {
       this.credentials = null;
-   }
-
-   private authHeaders() {
-      return { auth: this.credentials };
    }
 
    getImage(url: string) {
@@ -134,10 +134,15 @@ export class JiraApiService {
          })
       );
    }
+
+   private authHeaders() {
+      return { auth: this.credentials };
+   }
 }
 
-interface JiraWorklogModel {
-   comment: string;
-   started: string;
-   timeSpentSeconds: number;
+interface JiraUserInfo {
+   displayName: string;
+   avatarUrls: {
+      '48x48': string;
+   };
 }

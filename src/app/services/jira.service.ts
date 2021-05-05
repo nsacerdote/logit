@@ -7,49 +7,50 @@ import { Issue } from '../models/issue.model';
 import { UserInfo } from '../models/user-info.model';
 import { JiraApiService } from './jira-api.service';
 import { flatten, get, groupBy, map as lodashMap } from 'lodash-es';
+import { RemoteServer } from './remote-server.interface';
 
 /**
- * This service is responsible for contacting jira rest api (login, get autocomplete list, send worklogs, ...)
+ * This service is responsible for contacting jira rest api (login, get autocomplete list, send workLogs, ...)
  */
 @Injectable()
-export class JiraService {
+export class JiraService implements RemoteServer {
    constructor(private jiraApiService: JiraApiService) {}
 
-   private static buildWorklogBody(worklog: Worklog) {
+   private static buildWorkLogBody(workLog: Worklog) {
       return {
-         comment: worklog.description,
-         started: worklog
+         comment: workLog.description,
+         started: workLog
             .getStartTimeAsMoment()
             .format('YYYY-MM-DDTHH:mm:ss.SSSZZ'),
-         timeSpentSeconds: worklog.getWorkedDuration().asSeconds()
+         timeSpentSeconds: workLog.getWorkedDuration().asSeconds()
       };
    }
 
-   sendWorklogs(worklogs: Worklog[]): Observable<Worklog[]> {
-      const groupedWorklogs = groupBy(worklogs, 'issue.key');
+   sendWorkLogs(workLogs: Worklog[]): Observable<Worklog[]> {
+      const groupedWorkLogs = groupBy(workLogs, 'issue.key');
       return combineLatest(
-         lodashMap(groupedWorklogs, gW => this.sendWorklogsSequentially(gW))
+         lodashMap(groupedWorkLogs, gW => this.sendWorkLogsSequentially(gW))
       ).pipe(map(groupedResults => flatten(groupedResults)));
    }
 
-   private sendWorklogsSequentially(worklogs: Worklog[]) {
-      return from(worklogs).pipe(
-         concatMap(w => this.sendWorklog(w)),
-         map(() => worklogs)
+   private sendWorkLogsSequentially(workLogs: Worklog[]) {
+      return from(workLogs).pipe(
+         concatMap(w => this.sendWorkLog(w)),
+         map(() => workLogs)
       );
    }
 
-   private sendWorklog(worklog: Worklog) {
-      if (worklog.isSent()) {
-         return of(worklog);
+   private sendWorkLog(workLog: Worklog) {
+      if (workLog.isSent()) {
+         return of(workLog);
       }
 
       return concat(
          setAsSending(),
          this.jiraApiService
-            .sendWorklog(
-               worklog.issue.key,
-               JiraService.buildWorklogBody(worklog)
+            .sendWorkLog(
+               workLog.issue.key,
+               JiraService.buildWorkLogBody(workLog)
             )
             .pipe(
                map(result => setAsSent(result)),
@@ -58,13 +59,13 @@ export class JiraService {
       );
 
       function setAsSending() {
-         worklog.setAsSending();
-         return of(worklog);
+         workLog.setAsSending();
+         return of(workLog);
       }
 
       function setAsSent(result) {
-         worklog.setAsSent(result.id);
-         return worklog;
+         workLog.setAsSent(result.id);
+         return workLog;
       }
 
       function setAsError(err) {
@@ -74,8 +75,8 @@ export class JiraService {
             'response.data.errorMessages[0]',
             'Unknown error'
          );
-         worklog.setAsError(errorMessage);
-         return of(worklog);
+         workLog.setAsError(errorMessage);
+         return of(workLog);
       }
    }
 
@@ -83,16 +84,16 @@ export class JiraService {
       return this.jiraApiService.searchIssues(text);
    }
 
-   deleteWorklog(worklog: Worklog) {
-      return this.jiraApiService.deleteWorklog(worklog.issue.key, worklog.id);
+   deleteWorkLog(workLog: Worklog) {
+      return this.jiraApiService.deleteWorkLog(workLog.issue.key, workLog.id);
    }
 
    checkAndSaveCredentials(username, password): Observable<UserInfo> {
       return this.jiraApiService.checkAndSaveCredentials(username, password);
    }
 
-   clearJiraCredentials() {
-      this.jiraApiService.clearJiraCredentials();
+   clearCredentials() {
+      this.jiraApiService.clearCredentials();
    }
 
    getImage(url: string) {

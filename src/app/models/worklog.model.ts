@@ -10,7 +10,6 @@ export enum WorklogStatus {
 }
 
 export class Worklog {
-
    public statusMessage = '';
 
    constructor(
@@ -58,14 +57,6 @@ export class Worklog {
 
    isSent(): boolean {
       return this.status === WorklogStatus.SENT;
-   }
-
-   isSending(): boolean {
-      return this.status === WorklogStatus.SENDING;
-   }
-
-   hasError(): boolean {
-      return this.status === WorklogStatus.ERROR;
    }
 
    isNotSent(): boolean {

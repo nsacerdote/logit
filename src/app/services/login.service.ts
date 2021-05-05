@@ -21,7 +21,7 @@ export class LoginService {
 
    logout() {
       this.userInfo.next(null);
-      this.jiraService.clearJiraCredentials();
+      this.jiraService.clearCredentials();
    }
 
    getUserInfo() {
