@@ -6,7 +6,6 @@ import {
    OnInit
 } from '@angular/core';
 import {
-   AbstractControl,
    FormArray,
    FormBuilder,
    FormControl,
@@ -19,8 +18,8 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import * as moment from 'moment';
 import { switchMap, tap } from 'rxjs/operators';
 import { DialogService } from '../../../services/dialog.service';
-import { JiraService } from '../../../services/jira.service';
 import { TimeUtils } from '../../../shared/utils/time.utils';
+import { ServerService } from '../../../services/server.service';
 
 @Component({
    selector: 'app-worklog-list',
@@ -35,13 +34,15 @@ import { TimeUtils } from '../../../shared/utils/time.utils';
    ],
    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class WorklogListComponent extends BaseControlValueAccessorComponent
+export class WorklogListComponent
+   extends BaseControlValueAccessorComponent
    implements OnInit {
+
    constructor(
       private fb: FormBuilder,
       private cdRef: ChangeDetectorRef,
-      private jiraService: JiraService,
-      private dialogService: DialogService
+      private dialogService: DialogService,
+      private serverService: ServerService
    ) {
       super();
    }
@@ -106,7 +107,7 @@ export class WorklogListComponent extends BaseControlValueAccessorComponent
    private requestWorklogDeletion(worklog) {
       return this.dialogService
          .confirm('Do you really want to delete this worklog?')
-         .pipe(switchMap(() => this.jiraService.deleteWorkLog(worklog)));
+         .pipe(switchMap(() => this.serverService.deleteWorkLog(worklog)));
    }
 
    private removeWorklogFromArray(index) {

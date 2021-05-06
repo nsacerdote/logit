@@ -11,7 +11,9 @@ import { TimeUtils } from '../shared/utils/time.utils';
 /**
  * This service is responsible for providing a way to access the workdays
  */
-@Injectable()
+@Injectable({
+   providedIn: 'root'
+})
 export class WorkdayService {
    private workdayDb: Database<Workday>;
 

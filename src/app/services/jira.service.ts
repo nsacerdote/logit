@@ -7,13 +7,15 @@ import { Issue } from '../models/issue.model';
 import { UserInfo } from '../models/user-info.model';
 import { JiraApiService } from './jira-api.service';
 import { flatten, get, groupBy, map as lodashMap } from 'lodash-es';
-import { RemoteServer } from './remote-server.interface';
+import { Server } from './server.interface';
 
 /**
  * This service is responsible for contacting jira rest api (login, get autocomplete list, send workLogs, ...)
  */
-@Injectable()
-export class JiraService implements RemoteServer {
+@Injectable({
+   providedIn: 'root'
+})
+export class JiraService implements Server {
    constructor(private jiraApiService: JiraApiService) {}
 
    private static buildWorkLogBody(workLog: Worklog) {

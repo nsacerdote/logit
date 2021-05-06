@@ -30,16 +30,8 @@ import { WorklogStatusComponent } from './components/workday/worklog-list/worklo
 import { TimepickerComponent } from './shared/timepicker/timepicker.component';
 import { IssueAutocompleteComponent } from './shared/issue-autocomplete/issue-autocomplete.component';
 
-import { JiraApiService } from './services/jira-api.service';
-import { LoginService } from './services/login.service';
-import { SettingsService } from './services/settings.service';
-import { WorkdayService } from './services/workday.service';
-import { IssueAutocompleteService } from './services/issue-autocomplete.service';
-import { IssueCacheService } from './services/issue-cache.service';
-import { DialogService } from './services/dialog.service';
 import { ConfirmationDialogComponent } from './shared/confirmation-dialog/confirmation-dialog.component';
 import { LoginComponent } from './components/login/login.component';
-import { JiraService } from './services/jira.service';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -77,17 +69,6 @@ export function HttpLoaderFactory(http: HttpClient) {
             deps: [HttpClient]
          }
       })
-   ],
-   providers: [
-      ElectronService,
-      JiraApiService,
-      JiraService,
-      LoginService,
-      SettingsService,
-      WorkdayService,
-      IssueAutocompleteService,
-      IssueCacheService,
-      DialogService
    ],
    bootstrap: [AppComponent]
 })

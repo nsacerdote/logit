@@ -7,12 +7,14 @@ import { ElectronService } from './electron.service';
 import { SettingsService } from './settings.service';
 import { Issue } from '../models/issue.model';
 import { UserInfo } from '../models/user-info.model';
-import { WorkLogItem } from './remote-server.interface';
+import { WorkLogItem } from './server.interface';
 
 /**
  * This service is responsible for contacting jira rest api (login, get autocomplete list, send worklogs, ...)
  */
-@Injectable()
+@Injectable({
+   providedIn: 'root'
+})
 export class JiraApiService {
    private axios: typeof axios;
    private apiUrl: string;

@@ -4,7 +4,9 @@ import { Injectable } from '@angular/core';
 import { ipcRenderer, remote, webFrame } from 'electron';
 import * as childProcess from 'child_process';
 
-@Injectable()
+@Injectable({
+   providedIn: 'root'
+})
 export class ElectronService {
    ipcRenderer: typeof ipcRenderer;
    webFrame: typeof webFrame;

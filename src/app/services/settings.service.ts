@@ -11,7 +11,9 @@ const KEYS = {
 /**
  * This service is responsible for providing a way to access the settings configured in the settings/login screen
  */
-@Injectable()
+@Injectable({
+   providedIn: 'root'
+})
 export class SettingsService {
    private settingDb: Database<Setting>;
 

@@ -5,7 +5,9 @@ import { ConfirmationDialogComponent } from '../shared/confirmation-dialog/confi
 import { switchMap } from 'rxjs/operators';
 import { LoginComponent } from '../components/login/login.component';
 
-@Injectable()
+@Injectable({
+   providedIn: 'root'
+})
 export class DialogService {
    constructor(public dialog: MatDialog) {}
 

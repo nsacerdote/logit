@@ -12,8 +12,8 @@ import * as moment from 'moment';
 
 import { Workday } from '../../models/workday.model';
 import { WorkdayService } from '../../services/workday.service';
-import { JiraService } from '../../services/jira.service';
 import { ElectronService } from '../../services/electron.service';
+import { ServerService } from '../../services/server.service';
 
 @Component({
    selector: 'app-workday',
@@ -32,8 +32,8 @@ export class WorkdayComponent implements OnInit, OnDestroy {
       private fb: FormBuilder,
       private cdRef: ChangeDetectorRef,
       private workdayService: WorkdayService,
-      private jiraService: JiraService,
-      public electronService: ElectronService
+      public electronService: ElectronService,
+      private serverService: ServerService
    ) {}
 
    ngOnInit() {
@@ -109,7 +109,7 @@ export class WorkdayComponent implements OnInit, OnDestroy {
    }
 
    sendWorklogsToJira() {
-      return this.jiraService.sendWorkLogs(
+      return this.serverService.sendWorkLogs(
          this.getFormValueAsWorkday().worklogs
       );
    }

@@ -1,19 +1,21 @@
 import { Injectable } from '@angular/core';
 import { concat, Observable, of } from 'rxjs';
 import { Issue } from '../models/issue.model';
-import { JiraService } from './jira.service';
 import { IssueCacheService } from './issue-cache.service';
 import { scan } from 'rxjs/operators';
 import { sortBy, unionBy } from 'lodash-es';
+import { ServerService } from './server.service';
 
 /**
  * This service is responsible for providing autocomplete/search issues capabilities
  */
-@Injectable()
+@Injectable({
+   providedIn: 'root'
+})
 export class IssueAutocompleteService {
    constructor(
-      private jiraService: JiraService,
-      private issueCacheService: IssueCacheService
+      private issueCacheService: IssueCacheService,
+      private serverService: ServerService
    ) {}
 
    search(searchText: string): Observable<Issue[]> {
@@ -35,7 +37,7 @@ export class IssueAutocompleteService {
       if (!searchText || searchText.length < 3) {
          return of([]);
       }
-      return this.jiraService.searchIssues(searchText);
+      return this.serverService.searchIssues(searchText);
    }
 
    issueSelected(issue: Issue) {

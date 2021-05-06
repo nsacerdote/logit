@@ -6,7 +6,9 @@ import { Database } from '../entity/database';
 import { Issue } from '../models/issue.model';
 import { escapeRegExp, take } from 'lodash-es';
 
-@Injectable()
+@Injectable({
+   providedIn: 'root'
+})
 export class IssueCacheService {
    private issueCacheDb: Database<Issue>;
 

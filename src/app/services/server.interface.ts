@@ -3,15 +3,15 @@ import { Issue } from '../models/issue.model';
 import { Observable } from 'rxjs';
 import { UserInfo } from '../models/user-info.model';
 
-export interface RemoteServer {
+export interface Server {
    checkAndSaveCredentials(username, password): Observable<UserInfo>;
-   getImage(url: string);
+   getImage(url: string): Observable<string>;
 
    searchIssues(text: string): Observable<Issue[]>;
    sendWorkLogs(workLogs: Worklog[]): Observable<Worklog[]>;
-   deleteWorkLog(workLog: Worklog);
+   deleteWorkLog(workLog: Worklog): Observable<any>;
 
-   clearCredentials();
+   clearCredentials(): void;
 }
 
 export interface WorkLogItem {
