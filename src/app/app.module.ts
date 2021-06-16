@@ -11,8 +11,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
-import { ElectronService } from './services/electron.service';
-
 import { AppMaterialModule } from './shared/app-material.module';
 
 import { AppComponent } from './app.component';

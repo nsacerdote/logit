@@ -6,6 +6,7 @@ import { UserInfo } from '../models/user-info.model';
 import { Worklog } from '../models/worklog.model';
 import { Issue } from '../models/issue.model';
 import { switchMap, tap } from 'rxjs/operators';
+import { YouTrackService } from './you-track.service';
 
 @Injectable({
    providedIn: 'root'
@@ -13,8 +14,11 @@ import { switchMap, tap } from 'rxjs/operators';
 export class ServerService implements Server {
    private server$: Observable<Server>;
 
-   constructor(private jiraService: JiraService) {
-      this.server$ = of(jiraService);
+   constructor(
+      private jiraService: JiraService,
+      private youTrackService: YouTrackService
+   ) {
+      this.server$ = of(youTrackService);
    }
 
    checkAndSaveCredentials(username, password): Observable<UserInfo> {
