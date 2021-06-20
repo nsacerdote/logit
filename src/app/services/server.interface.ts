@@ -14,8 +14,3 @@ export interface Server {
    clearCredentials(): void;
 }
 
-export interface WorkLogItem {
-   started: string;
-   comment: string;
-   timeSpentSeconds: number;
-}

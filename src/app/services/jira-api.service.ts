@@ -1,13 +1,12 @@
 import axios from 'axios';
 import { Injectable } from '@angular/core';
-import { from, Observable } from 'rxjs';
+import {from, Observable, of} from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 
 import { ElectronService } from './electron.service';
 import { SettingsService } from './settings.service';
 import { Issue } from '../models/issue.model';
 import { UserInfo } from '../models/user-info.model';
-import { WorkLogItem } from './server.interface';
 
 /**
  * This service is responsible for contacting jira rest api (login, get autocomplete list, send worklogs, ...)
@@ -147,4 +146,10 @@ interface JiraUserInfo {
    avatarUrls: {
       '48x48': string;
    };
+}
+
+export interface WorkLogItem {
+   started: string;
+   comment: string;
+   timeSpentSeconds: number;
 }
