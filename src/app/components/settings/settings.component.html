@@ -1,12 +1,22 @@
 <mat-card>
-   <mat-card-title>
-      Settings
-   </mat-card-title>
+   <mat-card-title> Settings </mat-card-title>
    <mat-card-content>
       <mat-form-field appearance="standard">
-         <mat-label>JIRA URL</mat-label>
-         <input [(ngModel)]="jiraUrl" (blur)="save()" matInput placeholder="https://jira.example.com">
-         <mat-hint>URL of the JIRA server you want to send worklog to</mat-hint>
+         <mat-label>Server Type</mat-label>
+         <mat-select>
+            <mat-option [value]="'Jira'"> Jira </mat-option>
+            <mat-option [value]="'YouTrack'"> YouTrack </mat-option>
+         </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="standard">
+         <mat-label>Server URL</mat-label>
+         <input
+            [(ngModel)]="serverUrl"
+            (blur)="save()"
+            matInput
+            placeholder="https://something.example.com"
+         />
+         <mat-hint>URL of the Server you want to send worklog to</mat-hint>
       </mat-form-field>
    </mat-card-content>
 </mat-card>

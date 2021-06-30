@@ -29,7 +29,7 @@ export class LoginComponent implements OnInit {
    ) {}
 
    ngOnInit() {
-      this.settingsService.getJiraUser().subscribe({
+      this.settingsService.getServerUser().subscribe({
          next: user => {
             this.username = user;
             this.cdRef.detectChanges();
@@ -42,7 +42,7 @@ export class LoginComponent implements OnInit {
       this.loginService
          .login(this.username, this.password)
          .pipe(
-            switchMap(() => this.settingsService.saveJiraUser(this.username)),
+            switchMap(() => this.settingsService.saveServerUser(this.username)),
             tap(() => {
                this.dialogRef.close();
                this.status = 'IDLE';

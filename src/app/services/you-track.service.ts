@@ -9,7 +9,7 @@ import { Server } from './server.interface';
 import axios from 'axios';
 import { ElectronService } from './electron.service';
 import { SettingsService } from './settings.service';
-import { get } from 'lodash-es';
+import { get, unescape } from 'lodash-es';
 
 /**
  * This service is responsible for contacting jira rest api (login, get autocomplete list, send workLogs, ...)
@@ -24,7 +24,7 @@ export class YouTrackService implements Server {
    ) {
       this.axios = electronService.remote.require('axios');
       this.settingsService
-         .getJiraUrl()
+         .getServerUrl()
          .pipe(tap(jiraUrl => (this.serverUrl = `${jiraUrl}`)))
          .subscribe();
    }
@@ -65,7 +65,7 @@ export class YouTrackService implements Server {
       return concat(
          setAsSending(),
          this.apiSendWorklog(workLog).pipe(
-            map(result => setAsSent(result.data)),
+            map(result => setAsSent(result)),
             catchError(err => setAsError(err))
          )
       );
@@ -82,12 +82,11 @@ export class YouTrackService implements Server {
 
       function setAsError(err) {
          console.error(err.response.data);
-         const errorMessage = get(
-            err,
-            'response.data.error_description',
-            'Unknown error'
-         );
-         workLog.setAsError(errorMessage);
+         const errorMessage =
+            get(err.response, 'data.error_description') ||
+            get(err.response, 'data.error') ||
+            'Unknown error';
+         workLog.setAsError(unescape(errorMessage));
          return of(workLog);
       }
    }

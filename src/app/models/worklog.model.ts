@@ -21,7 +21,7 @@ export class Worklog {
       public status: WorklogStatus = WorklogStatus.NOT_SENT
    ) {
       if (this.isNotSent()) {
-         this.statusMessage = 'Waiting to be sent to Jira';
+         this.statusMessage = 'Waiting to be sent';
       }
    }
 
@@ -66,12 +66,12 @@ export class Worklog {
    setAsSent(id: string) {
       this.id = id;
       this.status = WorklogStatus.SENT;
-      this.statusMessage = 'Worklog has been sent to Jira';
+      this.statusMessage = 'Worklog has been sent';
    }
 
    setAsSending() {
       this.status = WorklogStatus.SENDING;
-      this.statusMessage = 'Sending worklog to Jira';
+      this.statusMessage = 'Sending worklog';
    }
 
    setAsError(details: string) {

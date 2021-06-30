@@ -5,8 +5,8 @@ import { Setting } from '../models/setting.model';
 import { map } from 'rxjs/operators';
 
 const KEYS = {
-   JIRA_URL: 'JIRA_URL',
-   JIRA_USER: 'JIRA_USER'
+   SERVER_URL: 'SERVER_URL',
+   SERVER_USER: 'SERVER_USER'
 };
 /**
  * This service is responsible for providing a way to access the settings configured in the settings/login screen
@@ -25,27 +25,27 @@ export class SettingsService {
       this.settingDb = new Database<Setting>('setting');
    }
 
-   getJiraUrl(): Observable<string> {
+   getServerUrl(): Observable<string> {
       return SettingsService.settingValue(
-         this.settingDb.findById(KEYS.JIRA_URL)
+         this.settingDb.findById(KEYS.SERVER_URL)
       );
    }
 
-   saveJiraUrl(newJiraUrl): Observable<string> {
+   saveServerUrl(newJiraUrl): Observable<string> {
       return SettingsService.settingValue(
-         this.settingDb.upsert(new Setting(KEYS.JIRA_URL, newJiraUrl))
+         this.settingDb.upsert(new Setting(KEYS.SERVER_URL, newJiraUrl))
       );
    }
 
-   getJiraUser(): Observable<string> {
+   getServerUser(): Observable<string> {
       return SettingsService.settingValue(
-         this.settingDb.findById(KEYS.JIRA_USER)
+         this.settingDb.findById(KEYS.SERVER_USER)
       );
    }
 
-   saveJiraUser(user): Observable<string> {
+   saveServerUser(user): Observable<string> {
       return SettingsService.settingValue(
-         this.settingDb.upsert(new Setting(KEYS.JIRA_USER, user))
+         this.settingDb.upsert(new Setting(KEYS.SERVER_USER, user))
       );
    }
 }

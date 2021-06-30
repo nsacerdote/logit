@@ -16,6 +16,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
 import { A11yModule } from '@angular/cdk/a11y';
+import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
    exports: [
@@ -35,7 +36,8 @@ import { A11yModule } from '@angular/cdk/a11y';
       MatProgressSpinnerModule,
       MatTooltipModule,
       MatDialogModule,
-      A11yModule
+      A11yModule,
+      MatSelectModule
    ]
 })
 export class AppMaterialModule {}

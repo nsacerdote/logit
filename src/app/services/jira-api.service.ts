@@ -28,7 +28,7 @@ export class JiraApiService {
    ) {
       this.axios = electronService.remote.require('axios');
       this.settingsService
-         .getJiraUrl()
+         .getServerUrl()
          .pipe(tap(jiraUrl => (this.apiUrl = `${jiraUrl}/rest/api/latest`)))
          .subscribe();
    }

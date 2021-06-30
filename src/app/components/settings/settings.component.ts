@@ -14,7 +14,7 @@ import { SettingsService } from '../../services/settings.service';
    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SettingsComponent implements OnInit, OnDestroy {
-   jiraUrl: string;
+   serverUrl: string;
 
    constructor(
       private settingsService: SettingsService,
@@ -22,14 +22,14 @@ export class SettingsComponent implements OnInit, OnDestroy {
    ) {}
 
    ngOnInit() {
-      this.settingsService.getJiraUrl().subscribe(jiraUrl => {
-         this.jiraUrl = jiraUrl;
+      this.settingsService.getServerUrl().subscribe(serverUrl => {
+         this.serverUrl = serverUrl;
          this.cdRef.detectChanges();
       });
    }
 
    save() {
-      this.settingsService.saveJiraUrl(this.jiraUrl).subscribe();
+      this.settingsService.saveServerUrl(this.serverUrl).subscribe();
    }
 
    ngOnDestroy(): void {
