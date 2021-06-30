@@ -9,6 +9,7 @@ import { Server } from './server.interface';
 import axios from 'axios';
 import { ElectronService } from './electron.service';
 import { SettingsService } from './settings.service';
+import { get } from 'lodash-es';
 
 /**
  * This service is responsible for contacting jira rest api (login, get autocomplete list, send workLogs, ...)
@@ -79,9 +80,14 @@ export class YouTrackService implements Server {
          return workLog;
       }
 
-      function setAsError(err: any) {
-         console.error(err);
-         workLog.setAsError('whatever!');
+      function setAsError(err) {
+         console.error(err.response.data);
+         const errorMessage = get(
+            err,
+            'response.data.error_description',
+            'Unknown error'
+         );
+         workLog.setAsError(errorMessage);
          return of(workLog);
       }
    }
@@ -142,10 +148,9 @@ export class YouTrackService implements Server {
 
    private checkResponse(response: YoutrackUserInfo) {
       if (response.guest) {
-         throw { response : { status : 401 } };
+         throw { response: { status: 401 } };
       }
    }
-
 
    private saveCredentials(username, password) {
       this.credentials = { username, password };
@@ -169,7 +174,6 @@ export class YouTrackService implements Server {
    private authHeaders(credentials?) {
       return { auth: credentials || this.credentials };
    }
-
 }
 
 interface YoutrackUserInfo {
