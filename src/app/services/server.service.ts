@@ -1,34 +1,33 @@
 import { Injectable } from '@angular/core';
 import { JiraService } from './jira.service';
 import { Server } from './server.interface';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { UserInfo } from '../models/user-info.model';
 import { Worklog } from '../models/worklog.model';
 import { Issue } from '../models/issue.model';
-import { switchMap, tap } from 'rxjs/operators';
+import { map, switchMap, tap } from 'rxjs/operators';
 import { YouTrackService } from './you-track.service';
+import { SettingsService } from './settings.service';
+
+export const SERVER_TYPES = {
+   JIRA: 'Jira',
+   YOUTRACK: 'Youtrack'
+};
 
 @Injectable({
    providedIn: 'root'
 })
 export class ServerService implements Server {
-   private server$: Observable<Server>;
-
    constructor(
+      private settingsService: SettingsService,
       private jiraService: JiraService,
       private youTrackService: YouTrackService
-   ) {
-      this.server$ = of(youTrackService);
-   }
+   ) {}
 
    checkAndSaveCredentials(username, password): Observable<UserInfo> {
       return this.runSwitch<UserInfo>(server =>
          server.checkAndSaveCredentials(username, password)
       );
-   }
-
-   clearCredentials() {
-      this.runTap(server => server.clearCredentials());
    }
 
    deleteWorkLog(workLog: Worklog): Observable<any> {
@@ -47,11 +46,27 @@ export class ServerService implements Server {
       return this.runSwitch<Worklog[]>(server => server.sendWorkLogs(workLogs));
    }
 
+   clearCredentials() {
+      this.runTap(server => server.clearCredentials()).subscribe();
+   }
+
    private runTap<T>(runFn: (s: Server) => void) {
       return this.server$.pipe(tap(runFn));
    }
 
    private runSwitch<T>(runFn: (s: Server) => Observable<T>) {
       return this.server$.pipe(switchMap(runFn));
+   }
+
+   private get server$(): Observable<Server> {
+      return this.settingsService
+         .getServerType()
+         .pipe(
+            map(serverType =>
+               serverType === SERVER_TYPES.JIRA
+                  ? this.jiraService
+                  : this.youTrackService
+            )
+         );
    }
 }

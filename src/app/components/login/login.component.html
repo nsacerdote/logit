@@ -35,7 +35,7 @@
    Wrong user or password
 </p>
 <p class="error" *ngIf="status === 'ERROR'">
-   There was an error on login check jira URL and internet connection
+   There was an unexpected error, please check the server URL and your internet connection
 </p>
 <mat-spinner *ngIf="status === 'LOADING'" diameter="40"></mat-spinner>
 <button

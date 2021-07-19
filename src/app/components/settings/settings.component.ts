@@ -6,6 +6,9 @@ import {
    OnInit
 } from '@angular/core';
 import { SettingsService } from '../../services/settings.service';
+import { combineLatest } from 'rxjs';
+import { SERVER_TYPES } from '../../services/server.service';
+import { LoginService } from '../../services/login.service';
 
 @Component({
    selector: 'app-settings',
@@ -15,24 +18,37 @@ import { SettingsService } from '../../services/settings.service';
 })
 export class SettingsComponent implements OnInit, OnDestroy {
    serverUrl: string;
+   serverType: string;
+   serverTypes = SERVER_TYPES;
 
    constructor(
       private settingsService: SettingsService,
-      private cdRef: ChangeDetectorRef
+      private cdRef: ChangeDetectorRef,
+      private loginService: LoginService
    ) {}
 
    ngOnInit() {
-      this.settingsService.getServerUrl().subscribe(serverUrl => {
+      combineLatest(
+         this.settingsService.getServerUrl(),
+         this.settingsService.getServerType()
+      ).subscribe(([serverUrl, serverType]) => {
          this.serverUrl = serverUrl;
+         this.serverType = serverType;
          this.cdRef.detectChanges();
       });
    }
 
    save() {
       this.settingsService.saveServerUrl(this.serverUrl).subscribe();
+      this.settingsService.saveServerType(this.serverType).subscribe();
    }
 
    ngOnDestroy(): void {
+      this.save();
+   }
+
+   serverTypeChanged() {
+      this.loginService.logout();
       this.save();
    }
 }

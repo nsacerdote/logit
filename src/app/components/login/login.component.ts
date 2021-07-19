@@ -48,7 +48,7 @@ export class LoginComponent implements OnInit {
                this.status = 'IDLE';
             }),
             catchError(err => {
-               if (err.response.status === 401) {
+               if (err?.response?.status === 401) {
                   this.status = 'ERROR_401';
                } else {
                   this.status = 'ERROR';

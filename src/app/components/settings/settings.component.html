@@ -3,10 +3,14 @@
    <mat-card-content>
       <mat-form-field appearance="standard">
          <mat-label>Server Type</mat-label>
-         <mat-select>
-            <mat-option [value]="'Jira'"> Jira </mat-option>
-            <mat-option [value]="'YouTrack'"> YouTrack </mat-option>
+         <mat-select [(ngModel)]="serverType" (selectionChange)="serverTypeChanged()">
+            <mat-option [value]="serverTypes.JIRA"> Jira </mat-option>
+            <mat-option [value]="serverTypes.YOUTRACK"> YouTrack </mat-option>
          </mat-select>
+         <mat-hint>
+            When switching between server types you will be logged out
+            automatically
+         </mat-hint>
       </mat-form-field>
       <mat-form-field appearance="standard">
          <mat-label>Server URL</mat-label>

@@ -6,6 +6,7 @@ import { map } from 'rxjs/operators';
 
 const KEYS = {
    SERVER_URL: 'SERVER_URL',
+   SERVER_TYPE: 'SERVER_TYPE',
    SERVER_USER: 'SERVER_USER'
 };
 /**
@@ -25,27 +26,37 @@ export class SettingsService {
       this.settingDb = new Database<Setting>('setting');
    }
 
-   getServerUrl(): Observable<string> {
-      return SettingsService.settingValue(
-         this.settingDb.findById(KEYS.SERVER_URL)
-      );
+   getServerType(): Observable<string> {
+      return this.get(KEYS.SERVER_TYPE);
    }
 
-   saveServerUrl(newJiraUrl): Observable<string> {
-      return SettingsService.settingValue(
-         this.settingDb.upsert(new Setting(KEYS.SERVER_URL, newJiraUrl))
-      );
+   saveServerType(newServerType): Observable<string> {
+      return this.upsert(KEYS.SERVER_TYPE, newServerType);
+   }
+
+   getServerUrl(): Observable<string> {
+      return this.get(KEYS.SERVER_URL);
+   }
+
+   saveServerUrl(newServerUrl): Observable<string> {
+      return this.upsert(KEYS.SERVER_URL, newServerUrl);
    }
 
    getServerUser(): Observable<string> {
-      return SettingsService.settingValue(
-         this.settingDb.findById(KEYS.SERVER_USER)
-      );
+      return this.get(KEYS.SERVER_USER);
    }
 
    saveServerUser(user): Observable<string> {
+      return this.upsert(KEYS.SERVER_USER, user);
+   }
+
+   private get(key): Observable<string> {
+      return SettingsService.settingValue(this.settingDb.findById(key));
+   }
+
+   private upsert(key, value) {
       return SettingsService.settingValue(
-         this.settingDb.upsert(new Setting(KEYS.SERVER_USER, user))
+         this.settingDb.upsert(new Setting(key, value))
       );
    }
 }
