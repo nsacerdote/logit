@@ -14,6 +14,8 @@ import { Workday } from '../../models/workday.model';
 import { WorkdayService } from '../../services/workday.service';
 import { ElectronService } from '../../services/electron.service';
 import { ServerService } from '../../services/server.service';
+import { DialogService } from '../../services/dialog.service';
+import { LoginService } from '../../services/login.service';
 
 @Component({
    selector: 'app-workday',
@@ -33,6 +35,8 @@ export class WorkdayComponent implements OnInit, OnDestroy {
       private cdRef: ChangeDetectorRef,
       private workdayService: WorkdayService,
       public electronService: ElectronService,
+      public dialogService: DialogService,
+      public loginService: LoginService,
       private serverService: ServerService
    ) {}
 
@@ -93,8 +97,12 @@ export class WorkdayComponent implements OnInit, OnDestroy {
    }
 
    sendWorklogs() {
+      if (!this.loginService.isLoggedIn()) {
+         this.dialogService.showLogin().subscribe();
+         return;
+      }
       this.sendingWorklogs = true;
-      this.sendWorklogsToJira().subscribe(
+      this.sendWorklogsToServer().subscribe(
          worklogs => {
             this.workdayForm.patchValue({
                worklogs: worklogs
@@ -108,7 +116,7 @@ export class WorkdayComponent implements OnInit, OnDestroy {
       );
    }
 
-   sendWorklogsToJira() {
+   sendWorklogsToServer() {
       return this.serverService.sendWorkLogs(
          this.getFormValueAsWorkday().worklogs
       );
