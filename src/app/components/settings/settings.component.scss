@@ -12,3 +12,21 @@ mat-form-field {
    width: 100%;
    font-size: 16px;
 }
+
+section {
+   margin-top: .75em;
+
+   label {
+      display: block;
+      color: rgba(0, 0, 0, 0.6);
+      margin-bottom: 5px;
+      font-size: 13px;
+   }
+
+   .hint {
+      color: rgba(0, 0, 0, 0.6);
+      font-size: 12px;
+      display: block;
+      margin-top: 5px;
+   }
+}

@@ -9,6 +9,7 @@ import { SettingsService } from '../../services/settings.service';
 import { combineLatest } from 'rxjs';
 import { SERVER_TYPES } from '../../services/server.service';
 import { LoginService } from '../../services/login.service';
+import { IssueCacheService } from '../../services/issue-cache.service';
 
 @Component({
    selector: 'app-settings',
@@ -24,14 +25,15 @@ export class SettingsComponent implements OnInit, OnDestroy {
    constructor(
       private settingsService: SettingsService,
       private cdRef: ChangeDetectorRef,
-      private loginService: LoginService
+      private loginService: LoginService,
+      private issueCacheService: IssueCacheService
    ) {}
 
    ngOnInit() {
-      combineLatest(
+      combineLatest([
          this.settingsService.getServerUrl(),
          this.settingsService.getServerType()
-      ).subscribe(([serverUrl, serverType]) => {
+      ]).subscribe(([serverUrl, serverType]) => {
          this.serverUrl = serverUrl;
          this.serverType = serverType;
          this.cdRef.detectChanges();
@@ -50,5 +52,9 @@ export class SettingsComponent implements OnInit, OnDestroy {
    serverTypeChanged() {
       this.loginService.logout();
       this.save();
+   }
+
+   clearIssueCache() {
+      this.issueCacheService.clearAllCachedIssues().subscribe();
    }
 }

@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
-import { combineLatest, concat, from, Observable, of } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
+import { combineLatest, from, Observable, of } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 
 import { Worklog } from '../models/worklog.model';
 import { Issue } from '../models/issue.model';
 import { UserInfo } from '../models/user-info.model';
-import { Server } from './server.interface';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { ElectronService } from './electron.service';
 import { SettingsService } from './settings.service';
-import { get, unescape } from 'lodash-es';
+import { AbstractServerService } from './abstract-server.service';
+import { get } from 'lodash-es';
 
 /**
  * This service is responsible for contacting jira rest api (login, get autocomplete list, send workLogs, ...)
@@ -17,11 +17,12 @@ import { get, unescape } from 'lodash-es';
 @Injectable({
    providedIn: 'root'
 })
-export class YouTrackService implements Server {
+export class YouTrackService extends AbstractServerService {
    constructor(
       electronService: ElectronService,
       private settingsService: SettingsService
    ) {
+      super();
       this.axios = electronService.remote.require('axios');
       this.settingsService
          .getServerUrl()
@@ -57,41 +58,7 @@ export class YouTrackService implements Server {
       return combineLatest(workLogs.map(w => this.sendWorkLog(w)));
    }
 
-   private sendWorkLog(workLog: Worklog): Observable<Worklog> {
-      if (workLog.isSent()) {
-         return of(workLog);
-      }
-
-      return concat(
-         setAsSending(),
-         this.apiSendWorklog(workLog).pipe(
-            map(result => setAsSent(result)),
-            catchError(err => setAsError(err))
-         )
-      );
-
-      function setAsSending() {
-         workLog.setAsSending();
-         return of(workLog);
-      }
-
-      function setAsSent(result) {
-         workLog.setAsSent(result.id);
-         return workLog;
-      }
-
-      function setAsError(err) {
-         console.error(err.response.data);
-         const errorMessage =
-            get(err.response, 'data.error_description') ||
-            get(err.response, 'data.error') ||
-            'Unknown error';
-         workLog.setAsError(unescape(errorMessage));
-         return of(workLog);
-      }
-   }
-
-   private apiSendWorklog(worklog: Worklog) {
+   protected apiSendWorklog(worklog: Worklog) {
       return from(
          this.axios.post(
             `${this.apiUrl}/issues/${worklog.issue.key}/timeTracking/workItems`,
@@ -172,6 +139,14 @@ export class YouTrackService implements Server {
 
    private authHeaders(credentials?) {
       return { auth: credentials || this.credentials };
+   }
+
+   protected getErrorMessage(err: AxiosError): string {
+      return (
+         get(err.response, 'data.error_description') ||
+         get(err.response, 'data.error') ||
+         'Unknown error, check server URL and internet connectivity'
+      );
    }
 }
 

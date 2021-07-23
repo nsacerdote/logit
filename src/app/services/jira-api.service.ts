@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { Injectable } from '@angular/core';
-import {from, Observable, of} from 'rxjs';
+import { from, Observable, of } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 
 import { ElectronService } from './electron.service';

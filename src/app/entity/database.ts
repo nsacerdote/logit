@@ -32,6 +32,10 @@ export class Database<T extends GenericDocEntity> {
       return this.bindMethod(this.database.find)(query);
    }
 
+   deleteAll(): Observable<number> {
+      return this.bindMethod(this.database.remove)({}, { multi: true });
+   }
+
    private bindMethod(method) {
       return bindNodeCallback(method).bind(this.database);
    }

@@ -3,7 +3,10 @@
    <mat-card-content>
       <mat-form-field appearance="standard">
          <mat-label>Server Type</mat-label>
-         <mat-select [(ngModel)]="serverType" (selectionChange)="serverTypeChanged()">
+         <mat-select
+            [(ngModel)]="serverType"
+            (selectionChange)="serverTypeChanged()"
+         >
             <mat-option [value]="serverTypes.JIRA"> Jira </mat-option>
             <mat-option [value]="serverTypes.YOUTRACK"> YouTrack </mat-option>
          </mat-select>
@@ -22,5 +25,10 @@
          />
          <mat-hint>URL of the Server you want to send worklog to</mat-hint>
       </mat-form-field>
+      <section>
+         <label>Clear Issue Cache</label>
+         <button mat-raised-button color="warn" (click)="clearIssueCache()">CLEAR</button>
+         <span class="hint">All issues cached in the autocomplete will be removed</span>
+      </section>
    </mat-card-content>
 </mat-card>

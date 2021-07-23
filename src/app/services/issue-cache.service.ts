@@ -37,4 +37,8 @@ export class IssueCacheService {
             map(issues => issues.map(i => Issue.of(i)))
          );
    }
+
+   clearAllCachedIssues(): Observable<number> {
+      return this.issueCacheDb.deleteAll();
+   }
 }

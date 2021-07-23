@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
-import { combineLatest, concat, from, Observable, of } from 'rxjs';
-import { catchError, concatMap, map } from 'rxjs/operators';
+import { combineLatest, from, Observable } from 'rxjs';
+import { concatMap, map } from 'rxjs/operators';
 
 import { Worklog } from '../models/worklog.model';
 import { Issue } from '../models/issue.model';
 import { UserInfo } from '../models/user-info.model';
 import { JiraApiService } from './jira-api.service';
 import { flatten, get, groupBy, map as lodashMap } from 'lodash-es';
-import { Server } from './server.interface';
+import { AbstractServerService } from './abstract-server.service';
+import { AxiosError } from 'axios';
 
 /**
  * This service is responsible for contacting jira rest api (login, get autocomplete list, send workLogs, ...)
@@ -15,8 +16,10 @@ import { Server } from './server.interface';
 @Injectable({
    providedIn: 'root'
 })
-export class JiraService implements Server {
-   constructor(private jiraApiService: JiraApiService) {}
+export class JiraService extends AbstractServerService {
+   constructor(private jiraApiService: JiraApiService) {
+      super();
+   }
 
    private static buildWorkLogBody(workLog: Worklog) {
       return {
@@ -42,46 +45,6 @@ export class JiraService implements Server {
       );
    }
 
-   private sendWorkLog(workLog: Worklog) {
-      if (workLog.isSent()) {
-         return of(workLog);
-      }
-
-      return concat(
-         setAsSending(),
-         this.jiraApiService
-            .sendWorkLog(
-               workLog.issue.key,
-               JiraService.buildWorkLogBody(workLog)
-            )
-            .pipe(
-               map(result => setAsSent(result)),
-               catchError(err => setAsError(err))
-            )
-      );
-
-      function setAsSending() {
-         workLog.setAsSending();
-         return of(workLog);
-      }
-
-      function setAsSent(result) {
-         workLog.setAsSent(result.id);
-         return workLog;
-      }
-
-      function setAsError(err) {
-         console.error(err.response.data);
-         const errorMessage = get(
-            err,
-            'response.data.errorMessages[0]',
-            'Unknown error'
-         );
-         workLog.setAsError(errorMessage);
-         return of(workLog);
-      }
-   }
-
    searchIssues(text: string): Observable<Issue[]> {
       return this.jiraApiService.searchIssues(text);
    }
@@ -100,5 +63,20 @@ export class JiraService implements Server {
 
    getImage(url: string) {
       return this.jiraApiService.getImage(url);
+   }
+
+   protected apiSendWorklog(worklog: Worklog): Observable<any> {
+      return this.jiraApiService.sendWorkLog(
+         worklog.issue.key,
+         JiraService.buildWorkLogBody(worklog)
+      );
+   }
+
+   protected getErrorMessage(err: AxiosError): string {
+      return get(
+         err,
+         'response.data.errorMessages[0]',
+         'Unknown error, check server URL and internet connectivity'
+      );
    }
 }
