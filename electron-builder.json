@@ -21,7 +21,7 @@
   "win": {
     "icon": "dist",
     "target": [
-      "portable"
+      "nsis"
     ]
   },
   "mac": {
