@@ -3,11 +3,12 @@ import { Observable } from 'rxjs';
 import { Database } from '../entity/database';
 import { Setting } from '../models/setting.model';
 import { map } from 'rxjs/operators';
+import {Credentials} from '../models/credentials.model';
 
 const KEYS = {
    SERVER_URL: 'SERVER_URL',
    SERVER_TYPE: 'SERVER_TYPE',
-   SERVER_USER: 'SERVER_USER'
+   SERVER_CREDENTIALS: 'SERVER_CREDENTIALS'
 };
 /**
  * This service is responsible for providing a way to access the settings configured in the settings/login screen
@@ -45,15 +46,15 @@ export class SettingsService {
       return this.upsert(KEYS.SERVER_URL, newServerUrl);
    }
 
-   getServerUser(): Observable<string> {
-      return this.get(KEYS.SERVER_USER);
+   getServerCredentials(): Observable<Credentials> {
+      return this.get(KEYS.SERVER_CREDENTIALS);
    }
 
-   saveServerUser(user): Observable<string> {
-      return this.upsert(KEYS.SERVER_USER, user);
+   saveServerCredentials(credentials: Credentials): Observable<Credentials> {
+      return this.upsert(KEYS.SERVER_CREDENTIALS, credentials);
    }
 
-   private get(key): Observable<string> {
+   private get(key): Observable<any> {
       return SettingsService.settingValue(this.settingDb.findById(key));
    }
 
