@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { combineLatest, from, Observable, of } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { map, switchMap, tap } from 'rxjs/operators';
 
 import { Worklog } from '../models/worklog.model';
 import { Issue } from '../models/issue.model';
@@ -24,17 +24,9 @@ export class YouTrackService extends AbstractServerService {
    ) {
       super();
       this.axios = electronService.remote.require('axios');
-      this.settingsService
-         .getServerUrl()
-         .pipe(tap(jiraUrl => (this.serverUrl = `${jiraUrl}`)))
-         .subscribe();
    }
 
-   private get apiUrl() {
-      return `${this.serverUrl}/youtrack/api`;
-   }
    private axios: typeof axios;
-   private serverUrl: string;
    private credentials: {
       username: string;
       password: string;
@@ -59,13 +51,18 @@ export class YouTrackService extends AbstractServerService {
    }
 
    protected apiSendWorklog(worklog: Worklog) {
-      return from(
-         this.axios.post(
-            `${this.apiUrl}/issues/${worklog.issue.key}/timeTracking/workItems`,
-            YouTrackService.buildWorkLogBody(worklog),
-            this.authHeaders()
-         )
-      ).pipe(map(r => r.data));
+      return this.apiUrl$.pipe(
+         switchMap(apiUrl =>
+            from(
+               this.axios.post(
+                  `${apiUrl}/issues/${worklog.issue.key}/timeTracking/workItems`,
+                  YouTrackService.buildWorkLogBody(worklog),
+                  this.authHeaders()
+               )
+            )
+         ),
+         map(r => r.data)
+      );
    }
 
    searchIssues(text: string): Observable<Issue[]> {
@@ -75,22 +72,31 @@ export class YouTrackService extends AbstractServerService {
    }
 
    private apiSearch(text: string): Observable<Array<{ idReadable; summary }>> {
-      return from(
-         this.axios.get<Array<{ idReadable; summary }>>(
-            `${this.apiUrl}/issues`,
-            {
-               ...this.authHeaders(),
-               params: { query: text, fields: 'idReadable,summary' }
-            }
-         )
-      ).pipe(map(r => r.data));
+      return this.apiUrl$.pipe(
+         switchMap(apiUrl =>
+            from(
+               this.axios.get<Array<{ idReadable; summary }>>(
+                  `${apiUrl}/issues`,
+                  {
+                     ...this.authHeaders(),
+                     params: { query: text, fields: 'idReadable,summary' }
+                  }
+               )
+            )
+         ),
+         map(r => r.data)
+      );
    }
 
    deleteWorkLog(workLog: Worklog) {
-      return from(
-         this.axios.delete(
-            `${this.apiUrl}/issues/${workLog.issue.key}/timeTracking/workItems/${workLog.id}`,
-            this.authHeaders()
+      return this.apiUrl$.pipe(
+         switchMap(apiUrl =>
+            from(
+               this.axios.delete(
+                  `${apiUrl}/issues/${workLog.issue.key}/timeTracking/workItems/${workLog.id}`,
+                  this.authHeaders()
+               )
+            )
          )
       );
    }
@@ -104,12 +110,17 @@ export class YouTrackService extends AbstractServerService {
    }
 
    private credentialsCheck(username, password): Observable<YoutrackUserInfo> {
-      return from(
-         this.axios.get<YoutrackUserInfo>(`${this.apiUrl}/users/me`, {
-            ...this.authHeaders({ username, password }),
-            params: { fields: 'name,avatarUrl,guest' }
-         })
-      ).pipe(map(r => r.data));
+      return this.apiUrl$.pipe(
+         switchMap(apiUrl =>
+            from(
+               this.axios.get<YoutrackUserInfo>(`${apiUrl}/users/me`, {
+                  ...this.authHeaders({ username, password }),
+                  params: { fields: 'name,avatarUrl,guest' }
+               })
+            )
+         ),
+         map(r => r.data)
+      );
    }
 
    private checkResponse(response: YoutrackUserInfo) {
@@ -134,7 +145,7 @@ export class YouTrackService extends AbstractServerService {
    }
 
    getImage(url: string) {
-      return of(this.serverUrl + url);
+      return this.serverUrl$.pipe(map(serverUrl => serverUrl + url));
    }
 
    private authHeaders(credentials?) {
@@ -146,6 +157,16 @@ export class YouTrackService extends AbstractServerService {
          get(err.response, 'data.error_description') ||
          get(err.response, 'data.error') ||
          'Unknown error, check server URL and internet connectivity'
+      );
+   }
+
+   private get serverUrl$(): Observable<string> {
+      return this.settingsService.getServerUrl();
+   }
+
+   private get apiUrl$(): Observable<string> {
+      return this.serverUrl$.pipe(
+         map(serverUrl => `${serverUrl}/youtrack/api`)
       );
    }
 }

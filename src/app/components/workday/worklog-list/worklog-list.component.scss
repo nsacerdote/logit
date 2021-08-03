@@ -1,9 +1,10 @@
 @import '_colors';
 
 $handleWidth: 50px;
-$timeAndSpentWidth: 70px;
+$timeWidth: 70px;
+$spentWidth: 75px;
 $issueWidth: 120px;
-$statusWidth: 100px;
+$statusWidth: 75px;
 $actionsWidth: 50px;
 
 table {
@@ -26,9 +27,12 @@ th.handle {
    width: $handleWidth;
 }
 
-th.time,
+th.time {
+   width: $timeWidth;
+}
+
 th.spent {
-   width: $timeAndSpentWidth;
+   width: $spentWidth;
 }
 
 th.issue {
@@ -123,9 +127,12 @@ th.description {
          width: $handleWidth;
       }
 
-      td.time,
+      td.time {
+         width: $timeWidth;
+      }
+
       td.spent {
-         width: $timeAndSpentWidth;
+         width: $spentWidth;
       }
 
       td.issue {

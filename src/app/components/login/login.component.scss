@@ -1,5 +1,9 @@
 @import "_colors";
 
+:host {
+   font-size: 1.6rem;
+}
+
 h4 {
    margin-top: 0;
 }
@@ -15,7 +19,6 @@ button {
 
 .error {
    color: $errorColor;
-   font-size: 1.6rem;
    margin: 10px 0;
 }
 

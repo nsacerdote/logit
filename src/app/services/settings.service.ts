@@ -40,7 +40,7 @@ export class SettingsService {
    }
 
    saveServerUrl(newServerUrl): Observable<string> {
-      if (newServerUrl.endsWith('/')) {
+      if (newServerUrl?.endsWith('/')) {
          newServerUrl = newServerUrl.slice(0, -1);
       }
       return this.upsert(KEYS.SERVER_URL, newServerUrl);

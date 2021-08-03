@@ -19,7 +19,7 @@ export class LoginService {
       private settingsService: SettingsService
    ) {}
 
-   public init(): Observable<boolean> {
+   public restoreLogin(): Observable<boolean> {
       return this.settingsService.getServerCredentials().pipe(
          switchMap(credentials =>
             this.login(credentials.username, credentials.password)

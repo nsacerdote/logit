@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Injectable } from '@angular/core';
 import { from, Observable, of } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { map, switchMap, tap } from 'rxjs/operators';
 
 import { ElectronService } from './electron.service';
 import { SettingsService } from './settings.service';
@@ -16,7 +16,6 @@ import { UserInfo } from '../models/user-info.model';
 })
 export class JiraApiService {
    private axios: typeof axios;
-   private apiUrl: string;
    private credentials: {
       username: string;
       password: string;
@@ -27,10 +26,6 @@ export class JiraApiService {
       private settingsService: SettingsService
    ) {
       this.axios = electronService.remote.require('axios');
-      this.settingsService
-         .getServerUrl()
-         .pipe(tap(jiraUrl => (this.apiUrl = `${jiraUrl}/rest/api/latest`)))
-         .subscribe();
    }
 
    private static getJql(query: string): string {
@@ -60,25 +55,33 @@ export class JiraApiService {
    }
 
    sendWorkLog(issueKey: string, workLog: WorkLogItem) {
-      return from(
-         this.axios.post(
-            `${this.apiUrl}/issue/${issueKey}/worklog`,
-            workLog,
-            this.authHeaders()
-         )
-      ).pipe(map(response => response.data));
+      return this.apiUrl$.pipe(
+         switchMap(apiUrl =>
+            from(
+               this.axios.post(
+                  `${apiUrl}/issue/${issueKey}/worklog`,
+                  workLog,
+                  this.authHeaders()
+               )
+            )
+         ),
+         map(response => response.data)
+      );
    }
 
    searchIssues(text: string): Observable<Issue[]> {
-      return from(
-         this.axios.get(`${this.apiUrl}/search`, {
-            ...this.authHeaders(),
-            params: {
-               jql: JiraApiService.getJql(text),
-               validateQuery: false
-            }
-         })
-      ).pipe(
+      return this.apiUrl$.pipe(
+         switchMap(apiUrl =>
+            from(
+               this.axios.get(`${apiUrl}/search`, {
+                  ...this.authHeaders(),
+                  params: {
+                     jql: JiraApiService.getJql(text),
+                     validateQuery: false
+                  }
+               })
+            )
+         ),
          map(response =>
             response.data.issues.map(
                (jiraIssue: any) =>
@@ -89,20 +92,27 @@ export class JiraApiService {
    }
 
    deleteWorkLog(issueKey, workLogId) {
-      return from(
-         this.axios.delete(
-            `${this.apiUrl}/issue/${issueKey}/worklog/${workLogId}`,
-            this.authHeaders()
+      return this.apiUrl$.pipe(
+         switchMap(apiUrl =>
+            from(
+               this.axios.delete(
+                  `${apiUrl}/issue/${issueKey}/worklog/${workLogId}`,
+                  this.authHeaders()
+               )
+            )
          )
       );
    }
 
    checkAndSaveCredentials(username, password): Observable<UserInfo> {
-      return from(
-         this.axios.get<JiraUserInfo>(`${this.apiUrl}/myself`, {
-            auth: { username, password }
-         })
-      ).pipe(
+      return this.apiUrl$.pipe(
+         switchMap(apiUrl =>
+            from(
+               this.axios.get<JiraUserInfo>(`${apiUrl}/myself`, {
+                  auth: { username, password }
+               })
+            )
+         ),
          tap(() => (this.credentials = { username, password })),
          map(response => ({
             displayName: response.data.displayName,
@@ -138,6 +148,12 @@ export class JiraApiService {
 
    private authHeaders() {
       return { auth: this.credentials };
+   }
+
+   private get apiUrl$(): Observable<string> {
+      return this.settingsService
+         .getServerUrl()
+         .pipe(map(jiraUrl => `${jiraUrl}/rest/api/latest`));
    }
 }
 
