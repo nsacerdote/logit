@@ -1,5 +1,16 @@
+:host {
+   user-select: none;
+}
+
 .fill-remaining-space {
+   display: flex;
    flex: 1 1 auto;
+   justify-content: center;
+   max-height: 100%;
+
+   img {
+      height: 30px;
+   }
 }
 
 a {

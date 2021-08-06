@@ -16,6 +16,7 @@ import { ElectronService } from '../../services/electron.service';
 import { ServerService } from '../../services/server.service';
 import { DialogService } from '../../services/dialog.service';
 import { LoginService } from '../../services/login.service';
+import {DateAdapter} from '@angular/material/core';
 
 @Component({
    selector: 'app-workday',
@@ -37,10 +38,12 @@ export class WorkdayComponent implements OnInit, OnDestroy {
       public electronService: ElectronService,
       public dialogService: DialogService,
       public loginService: LoginService,
-      private serverService: ServerService
+      private serverService: ServerService,
+      private dateAdapter: DateAdapter<Date>
    ) {}
 
    ngOnInit() {
+      this.dateAdapter.getFirstDayOfWeek = () => 1;
       const initialDate = moment();
       this.selectedDate$ = new BehaviorSubject<moment.Moment>(initialDate);
       this.loadDate(initialDate).subscribe();

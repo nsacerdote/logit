@@ -18,6 +18,7 @@ function createWindow() {
       height: size.height,
       minWidth: 1024,
       minHeight: 768,
+      show: false,
       webPreferences: {
          nodeIntegration: true,
          allowRunningInsecureContent: serve,
@@ -42,6 +43,9 @@ function createWindow() {
       );
       win.removeMenu();
    }
+
+   win.maximize();
+   win.show();
 
    // Emitted when the window is closed.
    win.on('closed', () => {

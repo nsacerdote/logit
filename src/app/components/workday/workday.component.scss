@@ -25,6 +25,10 @@
    @include for-desktop-up {
       width: 250px;
    }
+
+   @include for-big-desktop-up {
+      width: 350px;
+   }
 }
 
 form {
