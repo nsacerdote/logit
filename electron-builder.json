@@ -1,39 +1,33 @@
 {
-  "productName": "logit",
-  "directories": {
-    "output": "release/"
-  },
-    "files": [
-        "**/*",
-        "!**/*.ts",
-        "!*.idea",
-        "!package.json",
-        "!package-lock.json",
-        "!src/",
-        "!e2e/",
-        "!hooks/",
-        "!angular.json",
-        "!_config.yml",
-        "!karma.conf.js",
-        "!tsconfig.json",
-        "!tslint.json"
-    ],
-  "win": {
-    "icon": "dist",
-    "target": [
-      "nsis"
-    ]
-  },
-  "mac": {
-    "icon": "dist",
-    "target": [
-      "dmg"
-    ]
-  },
-  "linux": {
-    "icon": "dist",
-    "target": [
-      "AppImage"
-    ]
-  }
+   "productName": "logit",
+   "directories": {
+      "output": "release/"
+   },
+   "files": [
+      "**/*",
+      "!**/*.ts",
+      "!*.idea",
+      "!package.json",
+      "!package-lock.json",
+      "!src/",
+      "!e2e/",
+      "!hooks/",
+      "!angular.json",
+      "!_config.yml",
+      "!karma.conf.js",
+      "!tsconfig.json",
+      "!tslint.json"
+   ],
+   "win": {
+      "icon": "dist/favicon.png",
+      "target": ["nsis"]
+   },
+   "mac": {
+      "icon": "dist/favicon.png",
+      "target": ["dmg"]
+   },
+   "linux": {
+      "icon": "dist/favicon.png",
+      "target": ["AppImage"]
+   }
 }
